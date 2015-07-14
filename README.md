@@ -1,7 +1,8 @@
-# Reddit-XPostOriginalLinker
-XPostOriginalLinker Bot
+#Reddit XPost Original Submission Searcher
 
-Bot to find the original submission from an xpost
+Reddit - OriginalPostSearcher
+
+OriginalPostSearcher looks to find the original submission from an xpost
 
 #TODO
 - Need to find a server to host the bot
