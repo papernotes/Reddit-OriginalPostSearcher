@@ -1,9 +1,7 @@
-#Reddit XPost Original Submission Searcher
+# Reddit Original Post Searcher Bot
 
-Reddit - OriginalPostSearcher
+A Reddit bot that aims to comment with the original submission of an xpost
 
-OriginalPostSearcher looks to find the original submission from an xpost
-
-#TODO
-- Need to find a server to host the bot
-- Need to figure out a better way than logging to text file
+The format is:
+XPost from (subreddit with link)  
+(submission title with link)
