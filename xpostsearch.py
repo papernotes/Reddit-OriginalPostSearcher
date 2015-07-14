@@ -48,11 +48,6 @@ def run_bot():
         if value not in cache:
             cache.append(str(value))
 
-    print tempCache
-    print ("")
-    print cache
-    print ("")
-
     # go into the all subreddit
     subreddit = r.get_subreddit("all")
 
