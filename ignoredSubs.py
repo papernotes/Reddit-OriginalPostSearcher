@@ -7,4 +7,22 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
     	"sketches","suicidewatch", "talesfromtechsupport","torrent","torrents","trackers",
 	    "tr4shbros", "unitedkingdom", "askreddit", "benfrick", "futurology", 
     	"graphic_design", "historicalwhatif", "lolgrindr", "malifaux", "nfl", 
-    	"toonami", "ps2ceres","duelingcorner"]
+    	"toonami", "ps2ceres","duelingcorner", "gadgets", "personalfinance", "woahdude",
+        "wheredidthesodago", "gentlemanboners", "cats", "business", "holdmybeer", "beer",
+        "pcgaming", "motorcycles", "xboxone", "mma", "productivity", "parenting", "horror"
+        "enhancement", "biology", "apphookup", "sanfrancisco", "singularity", "transhuman",
+        "trucks", "evangelion", "listentous", "multihub", "woahpoon", "careerguidance", "ebola"
+        "keming", "aliens", "horses", "internationalpolitics", "libraries", "amazon", "harley",
+        "graphicnovels", "dualsport", "milwaukee", "blackops3", "soundsvintage", "fullmoviesonline",
+        "calamariraceteam", "listentoobscure", "blackberry", "supermoto", "european", "diesel",
+        "batesmotel", "modeltrains", "bikebuilders", "dailyherald", "shittydiy", "askmeanything",
+        "troutfishing", "hackedgadgets", "musicguides", "fayetteville", "englishlearning",
+        "mentalfloss", "deathrowdiesel", "listentocurated", "southbend", "subredditreports",
+        "gasmonkey", "bitcoinbeg", "listentousagain", "listentonew", "420", "gwar", "weaponsystems",
+        "rants", "tforcenetwork", "summit", "breckenridge", "hogfornoobs", "artreddits", "tcgcollecting",
+        "battletops", "sliders", "caddenmorandiary", "radd_it", "decaf", "woahgifs", "radditplaylists", 
+        "subofrome", "rainbow", "botwatchman", "fuckharley", "etfs", "neogaf", "svara", "msawareness", 
+        "metrosexual", "replygore", "usfreepress", "critterart", "3dchalk", "futurologymoderators", 
+        "truckmemes", "cssstyle", "happynews", "biochemistry2", "parables", "osiris", "truedisability", 
+        "futurologyappeals", "radditfaq", "weedtrees", "trglodyte", "happyworldnews", "stevediary",
+        "blacklistpics"]

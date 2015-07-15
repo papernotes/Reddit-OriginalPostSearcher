@@ -257,6 +257,7 @@ while(True):
 
     # start a search again in a couple of minutes (in seconds)
     time.sleep(300)
+    print ("Sleeping...")
 
     # clear the column to stay in compliance
     clearColumn()
