@@ -193,7 +193,7 @@ def createCommentString(submissionID):
     # none fix
     if originalSub == 'None':
         return
-        string = "XPost from /r/" + str(getOriginalSub(submissionID.title)) + ":  \n[" + str(originalPost) + "](" + str(originalLink) + ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if ^^you ^^have ^^any ^^questions"
+    string = "XPost from /r/" + str(getOriginalSub(submissionID.title)) + ":  \n[" + str(originalPost) + "](" + str(originalLink) + ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if ^^you ^^have ^^any ^^questions"
     print string
     print ('\n')
     # add the comment to the submission
