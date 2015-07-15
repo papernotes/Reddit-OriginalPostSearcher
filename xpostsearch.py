@@ -14,7 +14,7 @@ r.login(disable_warning=True)
 xPostDictionary = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
                    'cross-post']
 # list of words to check for so we don't post if source is already there
-originalComments = ['[source]', '[original]']
+originalComments = ['source', 'original']
 
 # create the engine for the database
 engine = create_engine(herokuDB.url)
@@ -23,8 +23,10 @@ engine = create_engine(herokuDB.url)
 ignoredSubs = ignoredSubs.list
 
 xPostTitle = ''     # the xpost title
+originalPost = ''   # the original submission
+originalLink = ''   # the original submission link
 subLink = None      # the submission shared link
-foundLink = False           # boolean if we found a link
+foundLink = False   # boolean if we found a link
 cache = []          # the searched posts
 tempCache = []
 
@@ -52,7 +54,7 @@ def run_bot():
     subreddit = r.get_subreddit("all")
 
     # get new submissions and see if their titles contain an xpost
-    for submission in subreddit.get_new(limit = 50):
+    for submission in subreddit.get_new(limit = 100):
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in ignoredSubs or
                 submission.over_18 is True):
@@ -88,6 +90,10 @@ def run_bot():
                         for string in originalComments)):
                     res = False
                     break
+
+            # to fix NoneType error
+            if res is None:
+                res = False
 
             # if we can find the original post
             if res is not False:
@@ -148,22 +154,29 @@ def searchOriginalSub(subreddit):
     global xPostTitle
     global subLink
     global foundLink
+    global originalPost
+    global originalLink
 
     # if there is an xPostTitle, look for it
     if xPostTitle is not False:
         # for each of the submissions in the subreddit, search the titles
         for submission in subreddit.get_hot(limit = 150):
-            # check to see if the string is in the title
-            if xPostTitle in submission.title.lower():
-                containsTitle = True
-            else:
-                containsTitle = False
+            try:
+                # check to see if the string is in the title
+                if xPostTitle in submission.title.lower():
+                    containsTitle = True
+                else:
+                    containsTitle = False
+            except:
+                pass
 
             # if it does contain the title or url, save that submission
             # if (containsTitle or (str(subLink) == str(submission.url))):
             if (containsTitle or
                     (str(subLink) == submission.url.encode('utf-8'))):
                 foundLink = True
+                originalPost = submission.title.encode('utf-8')
+                originalLink = submission.short_link
                 return
             # If we can't find the original post
             else:
@@ -172,12 +185,16 @@ def searchOriginalSub(subreddit):
 
 # Reply with a comment to the original post
 def createCommentString(submissionID):
-    string = "XPost from /r/" + str(submissionID.subreddit.display_name) + ":  \n" + "[" + str(submissionID.title) + "]" + "(" + submissionID.short_link + ")"
+    global xPostTitle
+    global originalPost
+    global originalLink
+    string = "XPost from /r/" + str(getOriginalSub(submissionID.title)) + ":  \n[" + str(originalPost) + "](" + str(originalLink) + ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if ^^you ^^have ^^any ^^questions"
     print string
     print ('\n')
     # add the comment to the submission
     submissionID.add_comment(string)
-    #print ("added")
+    # upvote for proper camaraderie
+    submissionID.upvote()
 
 
 # gets the title of the post to compare/see if
@@ -208,6 +225,7 @@ def writeToFile(submissionID):
         tempText = text('insert into searched_posts (post_id) values(:postID)')
         engine.execute(tempText, postID = submissionID)
 
+
 # Check if we're added to the database
 def isAdded(submissionID):
     isAddedText = text("select * from searched_posts where post_id = :postID")
@@ -216,11 +234,13 @@ def isAdded(submissionID):
     else:
         return False
 
+
 # Clear out the column if our rowcount too high
 def clearColumn():
     numRows = engine.execute("select * from searched_posts")
-    if (numRows.rowcount > 9001):
+    if (numRows.rowcount > 9000):
         engine.execute("delete from searched_posts")
+        print ("Cleared")
 
 # continuously run the bot
 while(True):
@@ -232,5 +252,6 @@ while(True):
 
     # start a search again in a couple of minutes (in seconds)
     time.sleep(300)
+
     # clear the column to stay in compliance
     clearColumn()
