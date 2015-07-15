@@ -188,13 +188,15 @@ def createCommentString(submissionID):
     global xPostTitle
     global originalPost
     global originalLink
-    string = "XPost from /r/" + str(getOriginalSub(submissionID.title)) + ":  \n[" + str(originalPost) + "](" + str(originalLink) + ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if ^^you ^^have ^^any ^^questions"
-    print string
-    print ('\n')
-    # add the comment to the submission
-    submissionID.add_comment(string)
-    # upvote for proper camaraderie
-    submissionID.upvote()
+    originalSub = getOriginalSub(submissionID.title)
+    if (getOriginalSub(submissionID.title) != 'None'):
+        string = "XPost from /r/" + str(getOriginalSub(submissionID.title)) + ":  \n[" + str(originalPost) + "](" + str(originalLink) + ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if ^^you ^^have ^^any ^^questions"
+        print string
+        print ('\n')
+        # add the comment to the submission
+        submissionID.add_comment(string)
+        # upvote for proper camaraderie
+        submissionID.upvote()
 
 
 # gets the title of the post to compare/see if
