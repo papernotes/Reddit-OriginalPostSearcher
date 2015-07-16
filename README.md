@@ -13,3 +13,6 @@ XPost from (subreddit with link)
 ## TODO
 - Do something to deal with unwanted comments
 - Continue to update the list of ignored subreddits
+
+## Updates
+1/14/15 - Fixed commenting bug that involved the wrong links and added ability to delete unwanted comments
