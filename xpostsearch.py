@@ -5,7 +5,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="XPostOriginalLinker 1.0.1")
+r = praw.Reddit(user_agent="XPostOriginalLinker 1.0.2")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -71,9 +71,9 @@ def run_bot():
         # if the submission title is in the xPostDictionary, find original
         if (any(string in post_title for string in xPostDictionary) and
                 submission.id not in cache):
-            print ("XPost found!")
+            print ("\nXPost found!")
             print ("subreddit = " + str(submission.subreddit.display_name.lower()))
-            print ("post title = " + post_title + "\n")
+            print ("post title = " + post_title)
 
             # set the subLink
             subLink = submission.url
@@ -126,6 +126,7 @@ def run_bot():
 # Find the original subreddit of the original submission
 # Returns the title of the original subreddit
 def getOriginalSub(title):
+    print ("Getting original subreddit of: " + str(title))
     # accesing the global xPostTitle
     global xPostTitle
     # set the xPostTitle
@@ -144,15 +145,17 @@ def getOriginalSub(title):
                 word = word.split('/r/')[1]
                 word = word.split(')')[0]   # try for parentheses first
                 word = word.split(']')[0]   # try for brackets
+                print ("/r/ word = " + word.encode('utf-8'))
                 return word
             elif 'r/' in word:
                 # split for r/
                 word = word.split('r/')[1]
                 word = word.split(')')[0]   # try for parentheses first
                 word = word.split(']')[0]   # try for brackets
+                print ("r/ word = " + word.encode('utf-8'))
                 return word
     except:
-        print ('failed')
+        print ("Could not get original subreddit")
         return False
 
 
@@ -166,7 +169,7 @@ def searchOriginalSub(subreddit):
     global originalLink
     global containsTitle
 
-    print ("Searching original Subreddit...\n")
+    print ("Searching original subreddit...")
 
     # if there is an xPostTitle, look for it
     if xPostTitle is not False:
@@ -183,7 +186,7 @@ def searchOriginalSub(subreddit):
 
             # if it does contain the title or url, save that submission
             if (containsTitle or
-                    (str(subLink) == submission.url.encode('utf-8'))):
+                    (subLink.encode('utf-8') == submission.url.encode('utf-8'))):
                 foundLink = True
                 originalPost = submission.title.encode('utf-8')
                 originalLink = submission.permalink
@@ -204,11 +207,19 @@ def createCommentString(submissionID):
     # None fix
     if originalSub == 'None':
         return
-    string = "XPost from /r/" + getOriginalSub(submissionID.title).encode('utf-8') + ":  \n[" + originalPost.encode('utf-8') + "](" + originalLink.encode('utf-8') + ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if ^^you ^^have ^^any ^^questions"
+    # Create the string to comment with
+    commentString = ("XPost from /r/" +
+                     getOriginalSub(submissionID.title).encode('utf-8') +
+                     ":  \n[" + originalPost.encode('utf-8') +
+                     "](" + originalLink.encode('utf-8') +
+                     ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if "
+                     "^^you ^^have ^^any ^^questions ^^or ^^suggestions")
 
     print ("Commented!")
+    print commentString
+
     # add the comment to the submission
-    submissionID.add_comment(string)
+    submissionID.add_comment(commentString)
     # upvote for proper camaraderie
     submissionID.upvote()
 
@@ -217,6 +228,7 @@ def createCommentString(submissionID):
 #   original has the same title
 # Returns the title of the xpost
 def getTitle(title):
+    print ("Getting the title of: " + str(title))
     # format TITLE(xpost)
     if (len(title) == title.find(')') + 1):
         return title.split('(')[0]
@@ -240,6 +252,7 @@ def deleteNegative():
     submitted = user.get_comments(limit = 50)
     for item in submitted:
         if int(item.score) < 0:
+            print ("\nDeleted negative comment\n        " + str(item))
             item.delete()
 
 
