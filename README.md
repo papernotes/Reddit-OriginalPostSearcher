@@ -11,7 +11,9 @@ XPost from (subreddit with link)
 ```
 
 ## TODO
-- Do something to deal with unwanted comments
+- Do something to deal with unwanted comments (Completed 1/15/2015)
+- Clean up code with pylint
+- Continue to update/optimize bot
 - Continue to update the list of ignored subreddits
 
 ## Updates
