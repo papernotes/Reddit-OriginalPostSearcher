@@ -53,7 +53,7 @@ def run_bot():
     subreddit = r.get_subreddit("all")
 
     # get new submissions and see if their titles contain an xpost
-    for submission in subreddit.get_new(limit = 100):
+    for submission in subreddit.get_new(limit = 200):
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in ignoredSubs or
                 submission.over_18 is True):
@@ -72,6 +72,7 @@ def run_bot():
         if (any(string in post_title for string in xPostDictionary) and
                 submission.id not in cache):
             print ("XPost found!")
+            print ("subreddit = " + str(submission.subreddit.display_name.lower()))
             print ("post title = " + post_title + "\n")
 
             # set the subLink
@@ -170,7 +171,7 @@ def searchOriginalSub(subreddit):
     # if there is an xPostTitle, look for it
     if xPostTitle is not False:
         # for each of the submissions in the subreddit, search the titles
-        for submission in subreddit.get_hot(limit = 200):
+        for submission in subreddit.get_hot(limit = 300):
             try:
                 # check to see if the string is in the title
                 if xPostTitle in submission.title.lower():
@@ -204,8 +205,8 @@ def createCommentString(submissionID):
     if originalSub == 'None':
         return
     string = "XPost from /r/" + getOriginalSub(submissionID.title).encode('utf-8') + ":  \n[" + originalPost.encode('utf-8') + "](" + originalLink.encode('utf-8') + ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if ^^you ^^have ^^any ^^questions"
-    print string
-    print ('\n')
+
+    print ("Commented!")
     # add the comment to the submission
     submissionID.add_comment(string)
     # upvote for proper camaraderie
@@ -262,9 +263,10 @@ def isAdded(submissionID):
 # Clear out the column if our rowcount too high
 def clearColumn():
     numRows = engine.execute("select * from searched_posts")
-    if (numRows.rowcount > 500):
+    if (numRows.rowcount > 1000):
         engine.execute("delete from searched_posts")
-        print ("Cleared database\n")
+        print ("Cleared database")
+
 
 # continuously run the bot
 while True:
@@ -277,9 +279,9 @@ while True:
     # delete unwanted posts if there are any
     deleteNegative()
 
-    # start a search again in a couple of minutes (in seconds)
+    # start a search again in two minutes
     print ("Sleeping...")
-    time.sleep(300)
+    time.sleep(120)
 
     # clear the column to stay in compliance
     clearColumn()
