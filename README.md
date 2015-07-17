@@ -19,5 +19,6 @@ XPost from (subreddit with link)
 ## Updates
 ```
 1.0.1 (1/15/2015) - Fixed commenting bug that involved the wrong links and added ability to delete unwanted comments  
-1.0.2 (1/16/2015) - Fixed a string checking bug for utf-8 and added logging/print statements
+1.0.2 (1/16/2015) - Fixed a string checking bug for utf-8 and added logging/print statements  
+1.0.3               Updated the order of finding the original post, check for content first
 ```
