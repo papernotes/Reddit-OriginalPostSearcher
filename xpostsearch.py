@@ -5,7 +5,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="XPostOriginalLinker 1.0.2")
+r = praw.Reddit(user_agent="XPostOriginalLinker 1.0.3")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
