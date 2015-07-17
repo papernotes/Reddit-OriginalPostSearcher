@@ -171,29 +171,49 @@ def searchOriginalSub(subreddit):
 
     print ("Searching original subreddit...")
 
-    # if there is an xPostTitle, look for it
     if xPostTitle is not False:
-        # for each of the submissions in the subreddit, search the titles
-        for submission in subreddit.get_hot(limit = 300):
-            try:
-                # check to see if the string is in the title
-                if xPostTitle in submission.title.lower():
-                    containsTitle = True
-                else:
-                    containsTitle = False
-            except:
-                pass
+        # for each of the submissions in the 'hot' subreddit, search
+        print ("Searching 'Hot'")
+        for submission in subreddit.get_hot(limit = 250):
 
-            # if it does contain the title or url, save that submission
-            if (containsTitle or
-                    (subLink.encode('utf-8') == submission.url.encode('utf-8'))):
+            # check to see if the shared content is the same first
+            if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
                 foundLink = True
                 originalPost = submission.title.encode('utf-8')
                 originalLink = submission.permalink
                 return
-            # If we can't find the original post
             else:
-                foundLink = False
+                # check to see if the string is in the title
+                try:
+                    if xPostTitle in submission.title.lower():
+                        foundLink = True
+                        originalPost = submission.title.encode('utf-8')
+                        originalLink = submission.permalink
+                        return
+                except:
+                    pass
+
+        print ("Searching 'New'")
+        # if we can't find the cross post in get_hot
+        for submission in subreddit.get_new(limit = 50):
+            # check to see if the shared content is the same first
+            if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
+                foundLink = True
+                originalPost = submission.title.encode('utf-8')
+                originalLink = submission.permalink
+                return
+            else:
+                # check to see if the string is in the title
+                try:
+                    if xPostTitle in submission.title.lower():
+                        foundLink = True
+                        originalPost = submission.title.encode('utf-8')
+                        originalLink = submission.permalink
+                        return
+                except:
+                    pass
+        # if we can't find the original post
+        foundLink = False
 
 
 # Reply with a comment to the original post
@@ -276,7 +296,7 @@ def isAdded(submissionID):
 # Clear out the column if our rowcount too high
 def clearColumn():
     numRows = engine.execute("select * from searched_posts")
-    if (numRows.rowcount > 1000):
+    if (numRows.rowcount > 1500):
         engine.execute("delete from searched_posts")
         print ("Cleared database")
 
@@ -292,9 +312,9 @@ while True:
     # delete unwanted posts if there are any
     deleteNegative()
 
-    # start a search again in two minutes
+    # start a search again in one minute
     print ("Sleeping...")
-    time.sleep(120)
+    time.sleep(60)
 
     # clear the column to stay in compliance
     clearColumn()
