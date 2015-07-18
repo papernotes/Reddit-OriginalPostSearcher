@@ -5,14 +5,14 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="OriginalPostSearcher Bot 1.0.5")
+r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.6")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
 xPostDictionary = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
                    'cross-post']
 # list of words to check for so we don't post if source is already there
-originalComments = ['source', 'original', 'sauce']
+originalComments = ['source', 'original', 'sauce', 'link', 'from', 'post']
 
 # create the engine for the database
 engine = create_engine(herokuDB.url)
@@ -25,7 +25,6 @@ originalPost = ''       # the original submission
 originalLink = ''       # the original submission link
 containsTitle = False   # boolean if we have the title
 subLink = None          # the submission shared link
-foundLink = False       # boolean if we found a link
 cache = []              # the searched posts
 tempCache = []          # temporary cache to get from database
 
@@ -33,7 +32,6 @@ tempCache = []          # temporary cache to get from database
 # the main driver of the bot
 def run_bot():
     global subLink
-    global foundLink
     global cache
 
     # set up the searched posts cache so we don't recomment
@@ -89,33 +87,29 @@ def run_bot():
                 print ("Res is None - Accented/Special Chars")
                 res = False
 
-            # check to see if there are any "sourced" comments already
-            # check to see if original subreddit is mentioned in comments
-            if res:
-                for comment in submission.comments:
-                    if (any(string in str(comment)
-                        for string in originalComments) or
-                        str(comment).find(res) == -1):
-                        print ("Source in comments found")
-                        res = False
-                        break
-
             # if we can find the original post
             if res:
                 # the original subreddit will contain the original post
                 origSub = r.get_subreddit(res)
-                # search the original subreddit
-                search_original_sub(origSub)
 
-                if foundLink:
-                    # comment
+                # check to see if there are any "sourced" comments already
+                # check to see if original subreddit is mentioned in comments
+                for comment in submission.comments:
+                    if (any(string in str(comment)
+                        for string in originalComments) or
+                        str(comment).find(res) == -1):
+                        print ("Source in comments found: ")
+                        print (str(comment) + "\n")
+                        res = False
+                        break
+
+                # if we can find the original submission, comment
+                if res is not False and search_original_sub(origSub):
                     try:
                         create_comment_string(submission)
                         res = False
-                        foundLink = False
                     except:
                         res = False
-                        foundLink = False
                         pass
 
             # if we can't find the original post
@@ -168,7 +162,6 @@ def search_original_sub(subreddit):
     # accessing the global
     global xPostTitle
     global subLink
-    global foundLink
     global originalPost
     global originalLink
     global containsTitle
@@ -182,18 +175,16 @@ def search_original_sub(subreddit):
 
             # check to see if the shared content is the same first
             if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
-                foundLink = True
                 originalPost = submission.title.encode('utf-8')
                 originalLink = submission.permalink
-                return
+                return True
             else:
                 # check to see if the string is in the title
                 try:
                     if xPostTitle in submission.title.lower():
-                        foundLink = True
                         originalPost = submission.title.encode('utf-8')
                         originalLink = submission.permalink
-                        return
+                        return True
                 except:
                     pass
 
@@ -202,26 +193,24 @@ def search_original_sub(subreddit):
         for submission in subreddit.get_new(limit = 100):
             # check to see if the shared content is the same first
             if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
-                foundLink = True
                 originalPost = submission.title.encode('utf-8')
                 originalLink = submission.permalink
-                return
+                return True
             else:
                 # check to see if the string is in the title
                 try:
                     if xPostTitle in submission.title.lower():
-                        foundLink = True
                         originalPost = submission.title.encode('utf-8')
                         originalLink = submission.permalink
-                        return
+                        return True
                 except:
                     pass
         # if we can't find the original post
         print ("Could not find original post - Hot/New Search Failed")
-        foundLink = False
+        return False
     else:
         print ("Could not find original post - No xPostTitle")
-        foundLink = False
+        return False
 
 
 # Reply with a comment to the original post
