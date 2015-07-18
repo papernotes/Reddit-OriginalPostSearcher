@@ -5,7 +5,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="XPostOriginalLinker 1.0.4")
+r = praw.Reddit(user_agent="OriginalPostSearcher Bot 1.0.5")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -84,20 +84,24 @@ def run_bot():
             # get the original subreddit title
             res = get_original_sub(post_title)
 
-            # check to see if there are any "sourced" comments already
-            # check to see if original subreddit is mentioned in comments
-            for comment in submission.comments:
-                if (any(string in str(comment)
-                        for string in originalComments)):
-                    res = False
-                    break
-
-            # to fix NoneType error
+            # to fix NoneType error, for accented/special chars
             if res is None:
+                print ("Res is None - Accented/Special Chars")
                 res = False
 
+            # check to see if there are any "sourced" comments already
+            # check to see if original subreddit is mentioned in comments
+            if res:
+                for comment in submission.comments:
+                    if (any(string in str(comment)
+                        for string in originalComments) or
+                        str(comment).find(res) == -1):
+                        print ("Source in comments found")
+                        res = False
+                        break
+
             # if we can find the original post
-            if res is not False:
+            if res:
                 # the original subreddit will contain the original post
                 origSub = r.get_subreddit(res)
                 # search the original subreddit
