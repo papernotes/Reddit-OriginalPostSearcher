@@ -25,4 +25,5 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "metrosexual", "replygore", "usfreepress", "critterart", "3dchalk", "futurologymoderators", 
         "truckmemes", "cssstyle", "happynews", "biochemistry2", "parables", "osiris", "truedisability", 
         "futurologyappeals", "radditfaq", "weedtrees", "trglodyte", "happyworldnews", "stevediary",
-        "blacklistpics", "serendipity", "pcmasterrace", "minecraft", "photoshopbattles"]
+        "blacklistpics", "serendipity", "pcmasterrace", "minecraft", "photoshopbattles", "interestingasfuck",
+        "peoplebeingjerks", "animalsbeingjerks", "gaming"]
