@@ -22,5 +22,6 @@ XPost from (subreddit with link)
 1.0.2 (1/16/2015) - Fixed a string checking bug for utf-8 and added logging/print statements  
 1.0.3               Updated the order of finding the original post, check for content first
 1.0.4 (1/17/2015) - Changed the return value of one of the variables, added more logging, updated ignoredSubs list/function names
-1.0.5 (1/17/2015) - Added source check, renamed old user_agent from old files, and updated ignoredSubs list
+1.0.5 (1/18/2015) - Added source check, renamed old user_agent from old files, and updated ignoredSubs list
+1.0.6               Updated source checking, updated user_agent, removed searchedPosts.txt, and updated ignoredSubs list
 ```
