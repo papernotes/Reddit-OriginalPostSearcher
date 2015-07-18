@@ -243,9 +243,9 @@ def create_comment_string(submissionID):
     print commentString
 
     # add the comment to the submission
-    #submissionID.add_comment(commentString)
+    submissionID.add_comment(commentString)
     # upvote for proper camaraderie
-    #submissionID.upvote()
+    submissionID.upvote()
 
 
 # gets the title of the post to compare/see if
