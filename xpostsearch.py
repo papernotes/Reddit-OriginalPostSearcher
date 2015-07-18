@@ -5,14 +5,14 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="XPostOriginalLinker 1.0.3")
+r = praw.Reddit(user_agent="XPostOriginalLinker 1.0.4")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
 xPostDictionary = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
                    'cross-post']
 # list of words to check for so we don't post if source is already there
-originalComments = ['source', 'original']
+originalComments = ['source', 'original', 'sauce']
 
 # create the engine for the database
 engine = create_engine(herokuDB.url)
@@ -20,14 +20,14 @@ engine = create_engine(herokuDB.url)
 # don't bother these subs
 ignoredSubs = ignoredSubs.list
 
-xPostTitle = ''     # the xpost title
-originalPost = ''   # the original submission
-originalLink = ''   # the original submission link
+xPostTitle = ''         # the xpost title
+originalPost = ''       # the original submission
+originalLink = ''       # the original submission link
 containsTitle = False   # boolean if we have the title
-subLink = None      # the submission shared link
-foundLink = False   # boolean if we found a link
-cache = []          # the searched posts
-tempCache = []      # temporary cache to get from database
+subLink = None          # the submission shared link
+foundLink = False       # boolean if we found a link
+cache = []              # the searched posts
+tempCache = []          # temporary cache to get from database
 
 
 # the main driver of the bot
@@ -57,7 +57,7 @@ def run_bot():
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in ignoredSubs or
                 submission.over_18 is True):
-            writeToFile(submission.id)
+            write_to_file(submission.id)
             continue
         # save the submission's title
         post_title = submission.title.lower()
@@ -79,10 +79,10 @@ def run_bot():
             subLink = submission.url
 
             # save submission to not recomment
-            writeToFile(submission.id)
+            write_to_file(submission.id)
 
             # get the original subreddit title
-            res = getOriginalSub(post_title)
+            res = get_original_sub(post_title)
 
             # check to see if there are any "sourced" comments already
             # check to see if original subreddit is mentioned in comments
@@ -101,12 +101,12 @@ def run_bot():
                 # the original subreddit will contain the original post
                 origSub = r.get_subreddit(res)
                 # search the original subreddit
-                searchOriginalSub(origSub)
+                search_original_sub(origSub)
 
                 if foundLink:
                     # comment
                     try:
-                        createCommentString(submission)
+                        create_comment_string(submission)
                         res = False
                         foundLink = False
                     except:
@@ -116,21 +116,21 @@ def run_bot():
 
             # if we can't find the original post
             else:
-                writeToFile(submission.id)
+                write_to_file(submission.id)
 
         # save submission to not recomment
         else:
-            writeToFile(submission.id)
+            write_to_file(submission.id)
 
 
 # Find the original subreddit of the original submission
 # Returns the title of the original subreddit
-def getOriginalSub(title):
+def get_original_sub(title):
     print ("Getting original subreddit of: " + str(title))
     # accesing the global xPostTitle
     global xPostTitle
     # set the xPostTitle
-    xPostTitle = getTitle(title)
+    xPostTitle = get_title(title)
 
     # Attempt to find the first /r/ phrase/subreddit
     try:
@@ -160,7 +160,7 @@ def getOriginalSub(title):
 
 
 # Once the title has been found, search the subreddit
-def searchOriginalSub(subreddit):
+def search_original_sub(subreddit):
     # accessing the global
     global xPostTitle
     global subLink
@@ -171,7 +171,7 @@ def searchOriginalSub(subreddit):
 
     print ("Searching original subreddit...")
 
-    if xPostTitle is not False:
+    if xPostTitle:
         # for each of the submissions in the 'hot' subreddit, search
         print ("Searching 'Hot'")
         for submission in subreddit.get_hot(limit = 250):
@@ -195,7 +195,7 @@ def searchOriginalSub(subreddit):
 
         print ("Searching 'New'")
         # if we can't find the cross post in get_hot
-        for submission in subreddit.get_new(limit = 50):
+        for submission in subreddit.get_new(limit = 100):
             # check to see if the shared content is the same first
             if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
                 foundLink = True
@@ -213,41 +213,45 @@ def searchOriginalSub(subreddit):
                 except:
                     pass
         # if we can't find the original post
+        print ("Could not find original post - Hot/New Search Failed")
+        foundLink = False
+    else:
+        print ("Could not find original post - No xPostTitle")
         foundLink = False
 
 
 # Reply with a comment to the original post
-def createCommentString(submissionID):
+def create_comment_string(submissionID):
     global xPostTitle
     global originalPost
     global originalLink
 
     # set the originalSub fix
-    originalSub = getOriginalSub(submissionID.title)
+    originalSub = get_original_sub(submissionID.title)
     # None fix
     if originalSub == 'None':
         return
     # Create the string to comment with
     commentString = ("XPost from /r/" +
-                     getOriginalSub(submissionID.title).encode('utf-8') +
+                     get_original_sub(submissionID.title).encode('utf-8') +
                      ":  \n[" + originalPost.encode('utf-8') +
                      "](" + originalLink.encode('utf-8') +
                      ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if "
                      "^^you ^^have ^^any ^^questions ^^or ^^suggestions")
 
-    print ("Commented!")
+    print ("\nCommented!")
     print commentString
 
     # add the comment to the submission
-    submissionID.add_comment(commentString)
+    #submissionID.add_comment(commentString)
     # upvote for proper camaraderie
-    submissionID.upvote()
+    #submissionID.upvote()
 
 
 # gets the title of the post to compare/see if
 #   original has the same title
 # Returns the title of the xpost
-def getTitle(title):
+def get_title(title):
     print ("Getting the title of: " + str(title))
     # format TITLE(xpost)
     if (len(title) == title.find(')') + 1):
@@ -263,11 +267,11 @@ def getTitle(title):
         return title.split('[')[1]
     # weird format, return false
     else:
-        return False
+        return None
 
 
 # delete badly received comments
-def deleteNegative():
+def delete_negative():
     user = r.get_redditor('OriginalPostSearcher')
     submitted = user.get_comments(limit = 50)
     for item in submitted:
@@ -278,14 +282,14 @@ def deleteNegative():
 
 # DATABASE
 # Write to the file
-def writeToFile(submissionID):
-    if isAdded(submissionID) is False:
+def write_to_file(submissionID):
+    if id_added(submissionID) is False:
         tempText = text('insert into searched_posts (post_id) values(:postID)')
         engine.execute(tempText, postID = submissionID)
 
 
 # Check if we're added to the database
-def isAdded(submissionID):
+def id_added(submissionID):
     isAddedText = text("select * from searched_posts where post_id = :postID")
     if (engine.execute(isAddedText, postID = submissionID).rowcount != 0):
         return True
@@ -294,9 +298,9 @@ def isAdded(submissionID):
 
 
 # Clear out the column if our rowcount too high
-def clearColumn():
+def clear_column():
     numRows = engine.execute("select * from searched_posts")
-    if (numRows.rowcount > 1500):
+    if (numRows.rowcount > 2000):
         engine.execute("delete from searched_posts")
         print ("Cleared database")
 
@@ -310,11 +314,11 @@ while True:
     tempCache = []
 
     # delete unwanted posts if there are any
-    deleteNegative()
+    delete_negative()
 
     # start a search again in one minute
     print ("Sleeping...")
     time.sleep(60)
 
     # clear the column to stay in compliance
-    clearColumn()
+    clear_column()
