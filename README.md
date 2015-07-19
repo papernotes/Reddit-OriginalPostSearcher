@@ -1,4 +1,5 @@
 # Reddit Original Post Searcher Bot
+[OriginalPostSearcher](https://www.reddit.com/user/OriginalPostSearcher/)  
 A Reddit bot that aims to comment with the original submission of an xpost  
 
 Made as a practice bot with Python for [Reddit](http://www.reddit.com/). I wanted to make something for fun to learn a bit more about Python and databases   
@@ -24,4 +25,5 @@ XPost from (subreddit with link)
 1.0.4 (1/17/2015) - Changed the return value of one of the variables, added more logging, updated ignoredSubs list/function names
 1.0.5 (1/18/2015) - Added source check, renamed old user_agent from old files, and updated ignoredSubs list
 1.0.6               Updated source checking, updated user_agent, removed searchedPosts.txt, and updated ignoredSubs list
+1.0.7 (1/19/2015) - Added check if getting subreddit failed, changed comment style, and updated ignoredSubs list
 ```
