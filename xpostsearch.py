@@ -5,7 +5,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.6")
+r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.7")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -168,6 +168,15 @@ def search_original_sub(subreddit):
 
     print ("Searching original subreddit...")
 
+    # Test to confirm getting subreddit
+    try:
+        test = subreddit.get_hot(limit = 1)
+        for submission in test:
+            print submission
+    except:
+        print ("Cannot get subreddit")
+        return False
+
     if xPostTitle:
         # for each of the submissions in the 'hot' subreddit, search
         print ("Searching 'Hot'")
@@ -225,7 +234,7 @@ def create_comment_string(submissionID):
     if originalSub == 'None':
         return
     # Create the string to comment with
-    commentString = ("XPost from /r/" +
+    commentString = ("Original post from /r/" +
                      get_original_sub(submissionID.title).encode('utf-8') +
                      ":  \n[" + originalPost.encode('utf-8') +
                      "](" + originalLink.encode('utf-8') +
