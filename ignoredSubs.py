@@ -26,4 +26,4 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "truckmemes", "cssstyle", "happynews", "biochemistry2", "parables", "osiris", "truedisability", 
         "futurologyappeals", "radditfaq", "weedtrees", "trglodyte", "happyworldnews", "stevediary",
         "blacklistpics", "serendipity", "pcmasterrace", "minecraft", "photoshopbattles", "interestingasfuck",
-        "peoplebeingjerks", "animalsbeingjerks", "gaming", "awwnime", "scotland", "k_on"]
+        "peoplebeingjerks", "animalsbeingjerks", "gaming", "awwnime", "scotland", "k_on", "blackfellas"]
