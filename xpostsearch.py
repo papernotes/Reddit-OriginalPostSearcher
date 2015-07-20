@@ -5,7 +5,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.7")
+r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.8")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -234,7 +234,7 @@ def create_comment_string(submissionID):
     if originalSub == 'None':
         return
     # Create the string to comment with
-    commentString = ("Original post from /r/" +
+    commentString = ("Original XPosted from /r/" +
                      get_original_sub(submissionID.title).encode('utf-8') +
                      ":  \n[" + originalPost.encode('utf-8') +
                      "](" + originalLink.encode('utf-8') +
