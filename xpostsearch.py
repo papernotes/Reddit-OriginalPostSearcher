@@ -5,7 +5,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.8")
+r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.9")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -51,7 +51,7 @@ def run_bot():
     subreddit = r.get_subreddit("all")
 
     # get new submissions and see if their titles contain an xpost
-    for submission in subreddit.get_new(limit = 200):
+    for submission in subreddit.get_new(limit=200):
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in ignoredSubs or
                 submission.over_18 is True):
@@ -69,9 +69,9 @@ def run_bot():
         # if the submission title is in the xPostDictionary, find original
         if (any(string in post_title for string in xPostDictionary) and
                 submission.id not in cache):
-            print ("\nXPost found!")
-            print ("subreddit = " + str(submission.subreddit.display_name.lower()))
-            print ("post title = " + post_title)
+            print("\nXPost found!")
+            print("subreddit = " + str(submission.subreddit.display_name.lower()))
+            print("post title = " + post_title)
 
             # set the subLink
             subLink = submission.url
@@ -84,7 +84,7 @@ def run_bot():
 
             # to fix NoneType error, for accented/special chars
             if res is None:
-                print ("Res is None - Accented/Special Chars")
+                print("Res is None - Accented/Special Chars")
                 res = False
 
             # if we can find the original post
@@ -96,10 +96,10 @@ def run_bot():
                 # check to see if original subreddit is mentioned in comments
                 for comment in submission.comments:
                     if (any(string in str(comment)
-                        for string in originalComments) or
-                        str(comment).find(res) == -1):
-                        print ("Source in comments found: ")
-                        print (str(comment) + "\n")
+                            for string in originalComments) or
+                            str(comment).find(res) == -1):
+                        print("Source in comments found: ")
+                        print(str(comment) + "\n")
                         res = False
                         break
 
@@ -124,7 +124,7 @@ def run_bot():
 # Find the original subreddit of the original submission
 # Returns the title of the original subreddit
 def get_original_sub(title):
-    print ("Getting original subreddit of: " + str(title))
+    print("Getting original subreddit of: " + str(title))
     # accesing the global xPostTitle
     global xPostTitle
     # set the xPostTitle
@@ -143,17 +143,17 @@ def get_original_sub(title):
                 word = word.split('/r/')[1]
                 word = word.split(')')[0]   # try for parentheses first
                 word = word.split(']')[0]   # try for brackets
-                print ("/r/ word = " + word.encode('utf-8'))
+                print("/r/ word = " + word.encode('utf-8'))
                 return word
             elif 'r/' in word:
                 # split for r/
                 word = word.split('r/')[1]
                 word = word.split(')')[0]   # try for parentheses first
                 word = word.split(']')[0]   # try for brackets
-                print ("r/ word = " + word.encode('utf-8'))
+                print("r/ word = " + word.encode('utf-8'))
                 return word
     except:
-        print ("Could not get original subreddit")
+        print("Could not get original subreddit")
         return False
 
 
@@ -166,21 +166,21 @@ def search_original_sub(subreddit):
     global originalLink
     global containsTitle
 
-    print ("Searching original subreddit...")
+    print("Searching original subreddit...")
 
     # Test to confirm getting subreddit
     try:
-        test = subreddit.get_hot(limit = 1)
+        test = subreddit.get_hot(limit=1)
         for submission in test:
-            print submission
+            print ("testing: " + str(submission))
     except:
-        print ("Cannot get subreddit")
+        print("Cannot get subreddit")
         return False
 
     if xPostTitle:
         # for each of the submissions in the 'hot' subreddit, search
-        print ("Searching 'Hot'")
-        for submission in subreddit.get_hot(limit = 250):
+        print("Searching 'Hot'")
+        for submission in subreddit.get_hot(limit=250):
 
             # check to see if the shared content is the same first
             if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
@@ -197,9 +197,9 @@ def search_original_sub(subreddit):
                 except:
                     pass
 
-        print ("Searching 'New'")
+        print("Searching 'New'")
         # if we can't find the cross post in get_hot
-        for submission in subreddit.get_new(limit = 100):
+        for submission in subreddit.get_new(limit=100):
             # check to see if the shared content is the same first
             if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
                 originalPost = submission.title.encode('utf-8')
@@ -215,10 +215,10 @@ def search_original_sub(subreddit):
                 except:
                     pass
         # if we can't find the original post
-        print ("Could not find original post - Hot/New Search Failed")
+        print("Could not find original post - Hot/New Search Failed")
         return False
     else:
-        print ("Could not find original post - No xPostTitle")
+        print("Could not find original post - No xPostTitle")
         return False
 
 
@@ -241,7 +241,7 @@ def create_comment_string(submissionID):
                      ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if "
                      "^^you ^^have ^^any ^^questions ^^or ^^suggestions")
 
-    print ("\nCommented!")
+    print("\nCommented!")
     print commentString
 
     # add the comment to the submission
@@ -254,7 +254,7 @@ def create_comment_string(submissionID):
 #   original has the same title
 # Returns the title of the xpost
 def get_title(title):
-    print ("Getting the title of: " + str(title))
+    print("Getting the title of: " + str(title))
     # format TITLE(xpost)
     if (len(title) == title.find(')') + 1):
         return title.split('(')[0]
@@ -275,10 +275,10 @@ def get_title(title):
 # delete badly received comments
 def delete_negative():
     user = r.get_redditor('OriginalPostSearcher')
-    submitted = user.get_comments(limit = 50)
+    submitted = user.get_comments(limit=50)
     for item in submitted:
         if int(item.score) < 0:
-            print ("\nDeleted negative comment\n        " + str(item))
+            print("\nDeleted negative comment\n        " + str(item))
             item.delete()
 
 
@@ -304,7 +304,7 @@ def clear_column():
     numRows = engine.execute("select * from searched_posts")
     if (numRows.rowcount > 2000):
         engine.execute("delete from searched_posts")
-        print ("Cleared database")
+        print("Cleared database")
 
 
 # continuously run the bot
@@ -319,7 +319,7 @@ while True:
     delete_negative()
 
     # start a search again in one minute
-    print ("Sleeping...")
+    print("Sleeping...")
     time.sleep(60)
 
     # clear the column to stay in compliance
