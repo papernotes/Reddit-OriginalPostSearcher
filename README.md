@@ -27,4 +27,5 @@ XPost from (subreddit with link)
 1.0.6               Updated source checking, updated user_agent, removed searchedPosts.txt, and updated ignoredSubs list
 1.0.7 (7/19/2015) - Added check if getting subreddit failed, changed comment style, and updated ignoredSubs list
 1.0.8 (7/20/2015) - Changed commenting style/words, updated ignoredSubs list
+1.0.9             - Code cleanup, updated ignoredSubs list
 ```
