@@ -5,7 +5,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-r = praw.Reddit(user_agent="OriginalPostSearcher 1.0.9")
+r = praw.Reddit(user_agent="OriginalPostSearcher 1.1.0")
 r.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -23,10 +23,10 @@ ignoredSubs = ignoredSubs.list
 xPostTitle = ''         # the xpost title
 originalPost = ''       # the original submission
 originalLink = ''       # the original submission link
-containsTitle = False   # boolean if we have the title
 subLink = None          # the submission shared link
 cache = []              # the searched posts
 tempCache = []          # temporary cache to get from database
+duplicateSub = None     # for search_duplicates
 
 
 # the main driver of the bot
@@ -104,7 +104,8 @@ def run_bot():
                         break
 
                 # if we can find the original submission, comment
-                if res is not False and search_original_sub(origSub):
+                if res is not False and (search_duplicates(submission, res) or 
+                    search_original_sub(origSub)):
                     try:
                         create_comment_string(submission)
                         res = False
@@ -157,20 +158,47 @@ def get_original_sub(title):
         return False
 
 
+# search the duplicates first to save time
+def search_duplicates(sub, result):
+    global subLink
+    global originalPost
+    global originalLink
+
+    print("Searching other discussions")
+
+    # go into the other discussions tab
+    duplicates = sub.get_duplicates()
+
+    # check to see if the content contains our subreddit
+    for item in duplicates:
+        # check if the url and subreddit is the same
+        if (subLink.encode('utf-8') == str(item.url).encode('utf-8') and
+                item.subreddit.display_name.lower().encode('utf-8') == result):
+            print ("Found post in other discussions")
+            originalPost = item.title.encode('utf-8')
+            originalLink = item.permalink
+            return True
+        else:
+            print("Can't find in other discussions")
+            return False
+
+    print ("No other discussions")
+    return False
+
+
 # Once the title has been found, search the subreddit
-def search_original_sub(subreddit):
+def search_original_sub(originalSubreddit):
     # accessing the global
     global xPostTitle
     global subLink
     global originalPost
     global originalLink
-    global containsTitle
 
     print("Searching original subreddit...")
 
     # Test to confirm getting subreddit
     try:
-        test = subreddit.get_hot(limit=1)
+        test = originalSubreddit.get_hot(limit=1)
         for submission in test:
             print ("testing: " + str(submission))
     except:
@@ -180,7 +208,7 @@ def search_original_sub(subreddit):
     if xPostTitle:
         # for each of the submissions in the 'hot' subreddit, search
         print("Searching 'Hot'")
-        for submission in subreddit.get_hot(limit=250):
+        for submission in originalSubreddit.get_hot(limit=250):
 
             # check to see if the shared content is the same first
             if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
@@ -199,7 +227,7 @@ def search_original_sub(subreddit):
 
         print("Searching 'New'")
         # if we can't find the cross post in get_hot
-        for submission in subreddit.get_new(limit=100):
+        for submission in originalSubreddit.get_new(limit=100):
             # check to see if the shared content is the same first
             if (subLink.encode('utf-8') == submission.url.encode('utf-8')):
                 originalPost = submission.title.encode('utf-8')
@@ -238,8 +266,10 @@ def create_comment_string(submissionID):
                      get_original_sub(submissionID.title).encode('utf-8') +
                      ":  \n[" + originalPost.encode('utf-8') +
                      "](" + originalLink.encode('utf-8') +
-                     ")  \n  \n^^I ^^am ^^a ^^bot, ^^PM ^^me ^^if "
-                     "^^you ^^have ^^any ^^questions ^^or ^^suggestions")
+                     ")\n*****  \n  \n^^I ^^am ^^a ^^bot, ^^made ^^for "
+                     "^^your ^^convenience ^^and ^^quick "
+                     "^^source-finding.  \n^^PM ^^me ^^if "
+                     "^^you ^^have ^^any ^^questions ^^or ^^suggestions.")
 
     print("\nCommented!")
     print commentString
@@ -275,7 +305,7 @@ def get_title(title):
 # delete badly received comments
 def delete_negative():
     user = r.get_redditor('OriginalPostSearcher')
-    submitted = user.get_comments(limit=50)
+    submitted = user.get_comments(limit=150)
     for item in submitted:
         if int(item.score) < 0:
             print("\nDeleted negative comment\n        " + str(item))

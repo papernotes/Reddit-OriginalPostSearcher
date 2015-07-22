@@ -28,4 +28,5 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "blacklistpics", "serendipity", "pcmasterrace", "minecraft", "photoshopbattles", "interestingasfuck",
         "peoplebeingjerks", "animalsbeingjerks", "gaming", "awwnime", "scotland", "k_on", "blackfellas",
         "games", "dvdcollection", "animefigures", "modernmagic", "australia", "calligraphy", "conspiracy",
-        "blackladies", "firefighting"]
+        "blackladies", "firefighting", "womenwithwatches", "hawks", "kotakuinaction", "mechanicalkeyboards",
+        "android"]
