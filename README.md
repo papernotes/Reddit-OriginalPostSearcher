@@ -28,6 +28,6 @@ XPost from (subreddit with link)
 1.0.7 (7/19/2015) - Added check if getting subreddit failed, changed comment style, and updated ignoredSubs list
 1.0.8 (7/20/2015) - Changed commenting style/words, updated ignoredSubs list
 1.0.9             - Code cleanup, updated ignoredSubs list
-**1.1.0** (7/21/2015) - Added new function to find the original post faster (doesn't cover self-posts), updated ignoredSubs list
+1.1.0 (7/21/2015) - Added new function to find the original post faster (doesn't cover self-posts), updated ignoredSubs list
 1.1.1             - Cleaned up code, updated ignoredSubs list
 ```
