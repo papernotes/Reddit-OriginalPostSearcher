@@ -6,7 +6,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.1")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.2")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -27,6 +27,7 @@ ORIGINAL_LINK = ''       # the original submission link
 SUB_LINK = None          # the submission shared link
 CACHE = []               # the searched posts
 TEMP_CACHE = []          # temporary CACHE to get from database
+AUTHOR = ''              # the author of the submission
 
 
 # Main driver of the bot
@@ -161,6 +162,7 @@ def search_duplicates(sub, result):
     global SUB_LINK
     global ORIGINAL_POST
     global ORIGINAL_LINK
+    global AUTHOR
 
     print("Searching other discussions")
 
@@ -175,6 +177,7 @@ def search_duplicates(sub, result):
             print ("Found post in other discussions")
             ORIGINAL_POST = item.title.encode('utf-8')
             ORIGINAL_LINK = item.permalink
+            AUTHOR = item.author
             return True
         else:
             print("Can't find in other discussions")
@@ -190,6 +193,7 @@ def search_original_sub(originalSubreddit):
     global SUB_LINK
     global ORIGINAL_POST
     global ORIGINAL_LINK
+    global AUTHOR
 
     print("Searching original subreddit...")
 
@@ -211,6 +215,7 @@ def search_original_sub(originalSubreddit):
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
+                AUTHOR = submission.author
                 return True
             else:
                 # check to see if the string is in the title
@@ -218,6 +223,7 @@ def search_original_sub(originalSubreddit):
                     if X_POST_TITLE in submission.title.lower():
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
+                        AUTHOR = submission.author
                         return True
                 except:
                     pass
@@ -229,6 +235,7 @@ def search_original_sub(originalSubreddit):
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
+                AUTHOR = submission.author
                 return True
             else:
                 # check to see if the string is in the title
@@ -236,6 +243,7 @@ def search_original_sub(originalSubreddit):
                     if X_POST_TITLE in submission.title.lower():
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
+                        AUTHOR = submission.author
                         return True
                 except:
                     pass
@@ -252,16 +260,23 @@ def create_comment_string(sub_id):
     global X_POST_TITLE
     global ORIGINAL_POST
     global ORIGINAL_LINK
+    global AUTHOR
 
     # set the originalSub fix
     originalSub = get_original_sub(sub_id.title)
     # None fix
     if originalSub == 'None':
         return
+    # Author fix
+    if not AUTHOR:
+        AUTHOR = "a [deleted] user"
+    else:
+        AUTHOR = "/u/" + str(AUTHOR)
     # Create the string to comment with
     comment_string = ("Original XPosted from /r/" +
                       get_original_sub(sub_id.title).encode('utf-8') +
-                      ":  \n[" + ORIGINAL_POST.encode('utf-8') +
+                      " by " + AUTHOR +
+                      "  \n[" + ORIGINAL_POST.encode('utf-8') +
                       "](" + ORIGINAL_LINK.encode('utf-8') +
                       ")\n*****  \n  \n^^I ^^am ^^a ^^bot, ^^made ^^for "
                       "^^your ^^convenience ^^and ^^quick "
