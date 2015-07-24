@@ -361,7 +361,7 @@ while True:
 
     # start a search again in one minute
     print("Sleeping...")
-    time.sleep(60)
+    time.sleep(30)
 
     # clear the column to stay in compliance
     clear_column()
