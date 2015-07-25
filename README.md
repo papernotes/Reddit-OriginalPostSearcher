@@ -31,4 +31,6 @@ XPost from (subreddit with link)
 1.1.0 (7/21/2015) - Added new function to find the original post faster (doesn't cover self-posts), updated ignoredSubs list
 1.1.1             - Cleaned up code, updated ignoredSubs list
 1.1.2 (7/22/2015) - Added original poster's username for commenting
+1.1.3 (7/25/2015) - Fixed checking original post bug that involved "in" phrase, updated commenting to emphasize convenience for
+                    mobile users, and updated ignoredSubs list
 ```
