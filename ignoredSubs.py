@@ -29,4 +29,5 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "peoplebeingjerks", "animalsbeingjerks", "gaming", "awwnime", "scotland", "k_on", "blackfellas",
         "games", "dvdcollection", "animefigures", "modernmagic", "australia", "calligraphy", "conspiracy",
         "blackladies", "firefighting", "womenwithwatches", "hawks", "kotakuinaction", "mechanicalkeyboards",
-        "android", "india", "wtf", "cringe", "disability", "kiketown", "russia", "dbz", "skeptic"]
+        "android", "india", "wtf", "cringe", "disability", "kiketown", "russia", "dbz", "skeptic", "knives",
+        "twoxchromosomes", "lewronggeneration"]

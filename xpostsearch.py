@@ -1,4 +1,4 @@
-# OriginalPostSearcher bot
+""" OriginalPostSearcher bot """
 import praw
 import time
 import ignoredSubs
@@ -30,8 +30,11 @@ TEMP_CACHE = []          # temporary CACHE to get from database
 AUTHOR = ''              # the author of the submission
 
 
-# Main driver of the bot
 def run_bot():
+    """
+        Main driver of the bot
+    """
+
     global SUB_LINK
     global CACHE
 
@@ -122,8 +125,11 @@ def run_bot():
             write_to_file(submission.id)
 
 
-# Returns title of original subreddit
 def get_original_sub(title):
+    """
+        Returns title of original subreddit
+    """
+
     print("Getting original subreddit of: " + str(title))
     global X_POST_TITLE
 
@@ -156,8 +162,10 @@ def get_original_sub(title):
         return False
 
 
-# Search the duplicates/other discussions to save time
 def search_duplicates(sub, result):
+    """
+        Search the duplicates/other discussions to save time
+    """
 
     global SUB_LINK
     global ORIGINAL_POST
@@ -187,8 +195,11 @@ def search_duplicates(sub, result):
     return False
 
 
-# Searches original subreddit after found title
 def search_original_sub(originalSubreddit):
+    """
+        Searches original subreddit after found title
+    """
+
     global X_POST_TITLE
     global SUB_LINK
     global ORIGINAL_POST
@@ -255,17 +266,20 @@ def search_original_sub(originalSubreddit):
         return False
 
 
-# Reply with a comment to the XPost
 def create_comment_string(sub_id):
+    """
+        Reply with a comment to the XPost
+    """
+
     global X_POST_TITLE
     global ORIGINAL_POST
     global ORIGINAL_LINK
     global AUTHOR
 
-    # set the originalSub fix
-    originalSub = get_original_sub(sub_id.title)
+    # set the original_sub fix
+    original_sub = get_original_sub(sub_id.title)
     # None fix
-    if originalSub == 'None':
+    if original_sub == 'None':
         return
     # Author fix
     if not AUTHOR:
@@ -273,7 +287,7 @@ def create_comment_string(sub_id):
     else:
         AUTHOR = "/u/" + str(AUTHOR)
     # Create the string to comment with
-    comment_string = ("Original XPosted from /r/" +
+    comment_string = ("Original XPost referenced from /r/" +
                       get_original_sub(sub_id.title).encode('utf-8') +
                       " by " + AUTHOR +
                       "  \n[" + ORIGINAL_POST.encode('utf-8') +
@@ -292,8 +306,10 @@ def create_comment_string(sub_id):
     sub_id.upvote()
 
 
-# Gets the title of the XPost for comparison
 def get_title(title):
+    """
+        Gets the title of the XPost for comparison
+    """
     print("Getting the title of: " + str(title))
     # format TITLE(xpost)
     if (len(title) == title.find(')') + 1):
@@ -312,10 +328,12 @@ def get_title(title):
         return None
 
 
-# Delete badly received comments
 def delete_negative():
+    """
+        Delete badly received comments
+    """
     user = REDDIT_CLIENT.get_redditor('OriginalPostSearcher')
-    submitted = user.get_comments(limit=150)
+    submitted = user.get_comments(limit=200)
     for item in submitted:
         if int(item.score) < 0:
             print("\nDeleted negative comment\n        " + str(item))
@@ -323,16 +341,22 @@ def delete_negative():
 
 
 # Database
-# Save the submissions we searched
+
 def write_to_file(sub_id):
+    """
+        Save the submissions we searched
+    """
 
     if id_added(sub_id) is False:
         temp_text = text('insert into searched_posts (post_id) values(:postID)')
         ENGINE.execute(temp_text, postID=sub_id)
 
 
-# Check to see if the item is already in the database
 def id_added(sub_id):
+    """
+        Check to see if the item is already in the database
+    """
+
     is_added_text = text("select * from searched_posts where post_id = :postID")
     if (ENGINE.execute(is_added_text, postID=sub_id).rowcount != 0):
         return True
@@ -340,8 +364,11 @@ def id_added(sub_id):
         return False
 
 
-# Clear out column/database if our rowcount is too high
 def clear_column():
+    """
+        Clear our column/database if our rowcount is too high
+    """
+
     num_rows = ENGINE.execute("select * from searched_posts")
     if (num_rows.rowcount > 2000):
         ENGINE.execute("delete from searched_posts")
@@ -359,9 +386,9 @@ while True:
     # delete unwanted posts if there are any
     delete_negative()
 
-    # start a search again in one minute
+    # start a search again after a while
     print("Sleeping...")
-    time.sleep(30)
+    time.sleep(15)
 
     # clear the column to stay in compliance
     clear_column()
