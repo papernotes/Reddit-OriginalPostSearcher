@@ -6,14 +6,14 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.2")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.3")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
 X_POST_DICTIONARY = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
                      'cross-post']
 # list of words to check for so we don't post if source is already there
-ORIGINAL_COMMENTS = ['source', 'original', 'sauce', 'link', 'from', 'post']
+ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link']
 
 # create the ENGINE for the database
 ENGINE = create_engine(herokuDB.url)
@@ -227,14 +227,16 @@ def search_original_sub(originalSubreddit):
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
                 AUTHOR = submission.author
+                print ("Shared content is the same")
                 return True
             else:
                 # check to see if the string is in the title
                 try:
-                    if X_POST_TITLE in submission.title.lower():
+                    if X_POST_TITLE == submission.title.lower():
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
                         AUTHOR = submission.author
+                        print ("XPost Title is the same")
                         return True
                 except:
                     pass
@@ -247,14 +249,16 @@ def search_original_sub(originalSubreddit):
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
                 AUTHOR = submission.author
+                print ("Shared content is the same")
                 return True
             else:
                 # check to see if the string is in the title
                 try:
-                    if X_POST_TITLE in submission.title.lower():
+                    if X_POST_TITLE == submission.title.lower():
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
                         AUTHOR = submission.author
+                        print ("XPost Title is the same")
                         return True
                 except:
                     pass
@@ -292,9 +296,9 @@ def create_comment_string(sub_id):
                       " by " + AUTHOR +
                       "  \n[" + ORIGINAL_POST.encode('utf-8') +
                       "](" + ORIGINAL_LINK.encode('utf-8') +
-                      ")\n*****  \n  \n^^I ^^am ^^a ^^bot, ^^made ^^for "
-                      "^^your ^^convenience ^^and ^^quick "
-                      "^^source-finding.  \n^^PM ^^me ^^if "
+                      ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
+                      "^^your ^^convenience ^^\(Especially ^^for ^^mobile ^^users)"
+                      ".  \n^^PM ^^me ^^if "
                       "^^you ^^have ^^any ^^questions ^^or ^^suggestions.")
 
     print("\nCommented!")
@@ -325,6 +329,7 @@ def get_title(title):
         return title.split('[')[1]
     # weird format, return false
     else:
+        print ("Couldn't get title correctly")
         return None
 
 
