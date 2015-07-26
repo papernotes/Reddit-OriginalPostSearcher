@@ -352,7 +352,7 @@ def write_to_file(sub_id):
         Save the submissions we searched
     """
 
-    if id_added(sub_id) is False:
+    if not id_added(sub_id):
         temp_text = text('insert into searched_posts (post_id) values(:postID)')
         ENGINE.execute(temp_text, postID=sub_id)
 
@@ -363,10 +363,7 @@ def id_added(sub_id):
     """
 
     is_added_text = text("select * from searched_posts where post_id = :postID")
-    if (ENGINE.execute(is_added_text, postID=sub_id).rowcount != 0):
-        return True
-    else:
-        return False
+    return ENGINE.execute(is_added_text, postID=sub_id).rowcount != 0
 
 
 def clear_column():
