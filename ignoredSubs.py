@@ -31,4 +31,4 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "blackladies", "firefighting", "womenwithwatches", "hawks", "kotakuinaction", "mechanicalkeyboards",
         "android", "india", "wtf", "cringe", "disability", "kiketown", "russia", "dbz", "skeptic", "knives",
         "twoxchromosomes", "lewronggeneration", "nascar", "badphilosophy", "protectandserve", "gifs",
-        "philosophy", "censorship"]
+        "philosophy", "censorship", "vegan", "conservative", "fatlogic"]

@@ -291,7 +291,7 @@ def create_comment_string(sub_id):
     else:
         AUTHOR = "/u/" + str(AUTHOR)
     # Create the string to comment with
-    comment_string = ("Original XPost referenced from /r/" +
+    comment_string = ("Original Post referenced from /r/" +
                       get_original_sub(sub_id.title).encode('utf-8') +
                       " by " + AUTHOR +
                       "  \n[" + ORIGINAL_POST.encode('utf-8') +
