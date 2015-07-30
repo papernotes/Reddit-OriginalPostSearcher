@@ -33,4 +33,5 @@ XPost from (subreddit with link)
 1.1.2 (7/22/2015) - Added original poster's username for commenting
 1.1.3 (7/25/2015) - Fixed checking original post bug that involved "in" phrase, updated commenting to emphasize convenience for
                     mobile users, and updated ignoredSubs list
+1.1.4 (7/29/2015) - Added ability to create no participation links for certain subreddits
 ```
