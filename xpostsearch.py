@@ -92,7 +92,7 @@ def run_bot():
 
             # to fix NoneType error, for accented/special chars
             if res is None:
-                print("Res is None - Accented/Special Chars")
+                print("Res is None - Other Format/Accented/Special Chars")
                 res = False
 
             # if we can find the original post
@@ -224,7 +224,7 @@ def search_original_sub(originalSubreddit):
     if X_POST_TITLE:
         # for each of the submissions in the 'hot' subreddit, search
         print("Searching 'Hot'")
-        for submission in originalSubreddit.get_hot(limit=250):
+        for submission in originalSubreddit.get_hot(limit=300):
 
             # check to see if the shared content is the same first
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
@@ -247,7 +247,7 @@ def search_original_sub(originalSubreddit):
 
         print("Searching 'New'")
         # if we can't find the cross post in get_hot
-        for submission in originalSubreddit.get_new(limit=100):
+        for submission in originalSubreddit.get_new(limit=250):
             # check to see if the shared content is the same first
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
                 ORIGINAL_POST = submission.title.encode('utf-8')
@@ -295,8 +295,9 @@ def create_comment_string(sub):
     else:
         AUTHOR = "/u/" + str(AUTHOR)
 
+
     # no participation link
-    if (submission.subreddit.display_name.lower() in NO_PARTICIPATION and
+    if (sub.subreddit.display_name.lower() in NO_PARTICIPATION and
         "www.reddit.com/r/" in ORIGINAL_LINK):
         print ("Using No Participation link")
         original_link_list = ORIGINAL_LINK.split("https://www.")
@@ -388,6 +389,8 @@ def clear_column():
         ENGINE.execute("delete from searched_posts")
         print("Cleared database")
 
+
+print ("Starting bot")
 
 # continuously run the bot
 while True:
