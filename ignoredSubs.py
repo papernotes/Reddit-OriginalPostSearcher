@@ -26,9 +26,10 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "truckmemes", "cssstyle", "happynews", "biochemistry2", "parables", "osiris", "truedisability", 
         "futurologyappeals", "radditfaq", "weedtrees", "trglodyte", "happyworldnews", "stevediary",
         "blacklistpics", "serendipity", "pcmasterrace", "minecraft", "photoshopbattles", "interestingasfuck",
-        "peoplebeingjerks", "animalsbeingjerks", "gaming", "awwnime", "scotland", "k_on", "blackfellas",
-        "games", "dvdcollection", "animefigures", "modernmagic", "australia", "calligraphy", "conspiracy",
-        "blackladies", "firefighting", "womenwithwatches", "hawks", "kotakuinaction", "mechanicalkeyboards",
-        "android", "india", "wtf", "cringe", "disability", "kiketown", "russia", "dbz", "skeptic", "knives",
-        "twoxchromosomes", "lewronggeneration", "nascar", "badphilosophy", "protectandserve", "gifs",
-        "philosophy", "censorship", "vegan", "conservative", "fatlogic"]
+        "peoplebeingjerks", "animalsbeingjerks", "gaming", "awwnime", "k_on", "blackfellas",
+        "games", "dvdcollection", "animefigures", "modernmagic", "australia", "calligraphy",
+        "blackladies", "firefighting", "womenwithwatches", "kotakuinaction", "mechanicalkeyboards",
+        "android", "wtf", "cringe", "dbz", "skeptic", "knives",
+        "twoxchromosomes", "lewronggeneration", "nascar", "badphilosophy", "gifs",
+        "philosophy", "censorship", "conservative", "fatlogic", "historyofideas", "earthprobes",
+        "fantasyfootball", "redditarmie", "mistyfront", "reclaimedbynature"]

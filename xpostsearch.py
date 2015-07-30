@@ -2,11 +2,12 @@
 import praw
 import time
 import ignoredSubs
+import nopart
 import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.3")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.4")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -20,6 +21,9 @@ ENGINE = create_engine(herokuDB.url)
 
 # don't bother these subs
 IGNORED_SUBS = ignoredSubs.list
+
+# No participation link subs
+NO_PARTICIPATION = nopart.list
 
 X_POST_TITLE = ''        # the xpost title
 ORIGINAL_POST = ''       # the original submission
@@ -270,7 +274,7 @@ def search_original_sub(originalSubreddit):
         return False
 
 
-def create_comment_string(sub_id):
+def create_comment_string(sub):
     """
         Reply with a comment to the XPost
     """
@@ -281,7 +285,7 @@ def create_comment_string(sub_id):
     global AUTHOR
 
     # set the original_sub fix
-    original_sub = get_original_sub(sub_id.title)
+    original_sub = get_original_sub(sub.title)
     # None fix
     if original_sub == 'None':
         return
@@ -290,9 +294,17 @@ def create_comment_string(sub_id):
         AUTHOR = "a [deleted] user"
     else:
         AUTHOR = "/u/" + str(AUTHOR)
+
+    # no participation link
+    if (submission.subreddit.display_name.lower() in NO_PARTICIPATION and
+        "www.reddit.com/r/" in ORIGINAL_LINK):
+        print ("Using No Participation link")
+        original_link_list = ORIGINAL_LINK.split("https://www.")
+        ORIGINAL_LINK = "np." + original_link_list[1]
+
     # Create the string to comment with
     comment_string = ("Original Post referenced from /r/" +
-                      get_original_sub(sub_id.title).encode('utf-8') +
+                      get_original_sub(sub.title).encode('utf-8') +
                       " by " + AUTHOR +
                       "  \n[" + ORIGINAL_POST.encode('utf-8') +
                       "](" + ORIGINAL_LINK.encode('utf-8') +
@@ -305,9 +317,9 @@ def create_comment_string(sub_id):
     print comment_string
 
     # add the comment to the submission
-    sub_id.add_comment(comment_string)
+    sub.add_comment(comment_string)
     # upvote for proper camaraderie
-    sub_id.upvote()
+    sub.upvote()
 
 
 def get_title(title):
