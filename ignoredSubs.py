@@ -29,7 +29,9 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "peoplebeingjerks", "animalsbeingjerks", "gaming", "awwnime", "k_on", "blackfellas",
         "games", "dvdcollection", "animefigures", "modernmagic", "australia", "calligraphy",
         "blackladies", "firefighting", "womenwithwatches", "kotakuinaction", "mechanicalkeyboards",
-        "android", "wtf", "cringe", "dbz", "skeptic", "knives",
+        "android", "wtf", "cringe", "dbz", "skeptic", "knives", "pics", "pic", "unexpected", "adviceanimals",
         "twoxchromosomes", "lewronggeneration", "nascar", "badphilosophy", "gifs",
         "philosophy", "censorship", "conservative", "fatlogic", "historyofideas", "earthprobes",
-        "fantasyfootball", "redditarmie", "mistyfront", "reclaimedbynature"]
+        "fantasyfootball", "redditarmie", "mistyfront", "reclaimedbynature", "blackpeopletwitter", "gamephysics",
+        "programmerhumor", "technology", "worldnews", "youtubehaiku", "movies", "shittyprogramming", "sports",
+        "music", "books", "history", "food", "television", "art", "diy"]

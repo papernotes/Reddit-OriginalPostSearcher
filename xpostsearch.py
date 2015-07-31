@@ -7,14 +7,16 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.4")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.5")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
 X_POST_DICTIONARY = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
                      'cross-post']
 # list of words to check for so we don't post if source is already there
-ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link']
+ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link',
+                     'x-post', 'xpost', 'x-post', 'crosspost', 'cross post',
+                     'cross-post']
 
 # create the ENGINE for the database
 ENGINE = create_engine(herokuDB.url)
@@ -97,7 +99,7 @@ def run_bot():
 
             # if we can find the original post
             if res:
-                print ("Res found")
+                print ("Res found: " + str(res))
                 # the original subreddit will contain the original post
                 orig_sub = REDDIT_CLIENT.get_subreddit(res)
 
@@ -113,10 +115,11 @@ def run_bot():
                         break
 
                 # if we can find the original submission, comment
-                if res and (search_duplicates(submission, res) or
+                if res and (search_user_posts(submission.author.name, res) or
+                            search_duplicates(submission, res) or
                             search_original_sub(orig_sub)):
                     try:
-                        print ("Attempting commeting")
+                        print ("Attempting to comment")
                         create_comment_string(submission)
                         res = False
                     except:
@@ -205,7 +208,45 @@ def search_duplicates(sub, result):
     return False
 
 
-def search_original_sub(originalSubreddit):
+def search_user_posts(poster_name, result):
+    """
+        Checks user's previous posts
+    """
+
+    global SUB_LINK
+    global ORIGINAL_POST
+    global ORIGINAL_LINK
+    global AUTHOR
+
+    print ("Searching user's previous posts")
+
+    # properly get the redditor's posts
+    poster_name = poster_name.encode('utf-8')
+    poster = REDDIT_CLIENT.get_redditor(poster_name)
+
+    # get the submissions and search
+    submissions = poster.get_submitted(limit=100)
+
+    for submission in submissions:
+        # Check to see if the link is the same
+        if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
+                submission.subreddit.display_name.lower().encode('utf-8')
+                == result):
+            print ("Found post in user's previous posts")
+            print ("Title of post: " + str(submission.title))
+            ORIGINAL_POST = item.title.encode('utf-8')
+            ORIGINAL_LINK = submission.permalink
+            AUTHOR = submission.author
+            return True
+        else:
+            print ("Can't find in previous posts")
+            return False
+
+    print ("Can't find in previous posts")
+    return False
+
+
+def search_original_sub(original_sub):
     """
         Searches original subreddit after found title
     """
@@ -220,7 +261,7 @@ def search_original_sub(originalSubreddit):
 
     # Test to confirm getting subreddit
     try:
-        test = originalSubreddit.get_hot(limit=1)
+        test = original_sub.get_hot(limit=1)
         for submission in test:
             print ("testing: " + str(submission))
     except:
@@ -230,7 +271,7 @@ def search_original_sub(originalSubreddit):
     if X_POST_TITLE:
         # for each of the submissions in the 'hot' subreddit, search
         print("Searching 'Hot'")
-        for submission in originalSubreddit.get_hot(limit=300):
+        for submission in original_sub.get_hot(limit=300):
 
             # check to see if the shared content is the same first
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
@@ -253,7 +294,7 @@ def search_original_sub(originalSubreddit):
 
         print("Searching 'New'")
         # if we can't find the cross post in get_hot
-        for submission in originalSubreddit.get_new(limit=250):
+        for submission in original_sub.get_new(limit=250):
             # check to see if the shared content is the same first
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
                 ORIGINAL_POST = submission.title.encode('utf-8')
@@ -285,7 +326,7 @@ def create_comment_string(sub):
         Reply with a comment to the XPost
     """
 
-    print ("Attempting to comment")
+    print ("Developing comment")
 
     global X_POST_TITLE
     global ORIGINAL_POST
@@ -306,7 +347,7 @@ def create_comment_string(sub):
 
     # no participation link
     if (sub.subreddit.display_name.lower() in NO_PARTICIPATION and
-        "www.reddit.com/r/" in ORIGINAL_LINK):
+            "www.reddit.com/r/" in ORIGINAL_LINK):
         print ("Using No Participation link")
         original_link_list = ORIGINAL_LINK.split("https://www.")
         ORIGINAL_LINK = "np." + original_link_list[1]
@@ -359,7 +400,7 @@ def delete_negative():
         Delete badly received comments
     """
     user = REDDIT_CLIENT.get_redditor('OriginalPostSearcher')
-    submitted = user.get_comments(limit=200)
+    submitted = user.get_comments(limit=250)
     for item in submitted:
         if int(item.score) < 0:
             print("\nDeleted negative comment\n        " + str(item))
