@@ -114,7 +114,8 @@ def run_bot():
                         break
 
                 # if we can find the original submission, comment
-                if res and (search_user_posts(submission.author.name, res) or
+                if res and (search_user_posts(submission.author.name, 
+                            res, submission.id) or
                             search_duplicates(submission, res) or
                             search_original_sub(orig_sub)):
                     try:
@@ -207,7 +208,7 @@ def search_duplicates(sub, result):
     return False
 
 
-def search_user_posts(poster_name, result):
+def search_user_posts(poster_name, result, sub_id):
     """
         Checks user's previous posts
     """
@@ -229,11 +230,10 @@ def search_user_posts(poster_name, result):
     for submission in submissions:
         # Check to see if the link is the same
         if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
-                submission.subreddit.display_name.lower().encode('utf-8')
-                == result):
+            submission.id != sub_id):
             print ("Found post in user's previous posts")
             print ("Title of post: " + str(submission.title))
-            ORIGINAL_POST = item.title.encode('utf-8')
+            ORIGINAL_POST = submission.title.encode('utf-8')
             ORIGINAL_LINK = submission.permalink
             AUTHOR = submission.author
             return True
@@ -427,15 +427,23 @@ def id_added(sub_id):
     return ENGINE.execute(is_added_text, postID=sub_id).rowcount != 0
 
 
-def clear_column():
+def clear_database():
     """
         Clear our column/database if our rowcount is too high
+        Also cuts the CACHE in half
     """
+
+    global CACHE
 
     num_rows = ENGINE.execute("select * from searched_posts")
     if (num_rows.rowcount > 2000):
         ENGINE.execute("delete from searched_posts")
         print("Cleared database")
+
+    if len(CACHE) > 2000:
+        # Cut CACHE in half, keep last half
+        CACHE = CACHE[int(len(CACHE))/2:]
+        print ("Halved CACHE")
 
 
 print ("Starting bot")
@@ -456,4 +464,4 @@ while True:
     time.sleep(10)
 
     # clear the column to stay in compliance
-    clear_column()
+    clear_database()
