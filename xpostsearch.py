@@ -59,7 +59,7 @@ def run_bot():
     subreddit = REDDIT_CLIENT.get_subreddit("all")
 
     # get new submissions and see if their titles contain an xpost
-    for submission in subreddit.get_new(limit=200):
+    for submission in subreddit.get_new(limit=300):
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in IGNORED_SUBS or
                 submission.over_18 is True):
@@ -97,6 +97,7 @@ def run_bot():
 
             # if we can find the original post
             if res:
+                print ("Res found")
                 # the original subreddit will contain the original post
                 orig_sub = REDDIT_CLIENT.get_subreddit(res)
 
@@ -112,16 +113,19 @@ def run_bot():
                         break
 
                 # if we can find the original submission, comment
-                if res is not False and (search_duplicates(submission, res) or
-                                         search_original_sub(orig_sub)):
+                if res and (search_duplicates(submission, res) or
+                            search_original_sub(orig_sub)):
                     try:
+                        print ("Attempting commeting")
                         create_comment_string(submission)
                         res = False
                     except:
+                        print ("Commenting failed")
                         res = False
 
             # if we can't find the original post
             else:
+                print ("No res")
                 write_to_file(submission.id)
 
         # save submission to not recomment
@@ -179,14 +183,16 @@ def search_duplicates(sub, result):
     print("Searching other discussions")
 
     # go into the other discussions tab
-    duplicates = sub.get_duplicates()
+    duplicates = sub.get_duplicates(limit=50)
 
     # check to see if the content contains our subreddit
     for item in duplicates:
+        print ("Item is " + str(item))
         # check if the url and subreddit is the same
         if (SUB_LINK.encode('utf-8') == str(item.url).encode('utf-8') and
                 item.subreddit.display_name.lower().encode('utf-8') == result):
             print ("Found post in other discussions")
+            print ("Title of duplicate: " + str(item.title))
             ORIGINAL_POST = item.title.encode('utf-8')
             ORIGINAL_LINK = item.permalink
             AUTHOR = item.author
@@ -278,6 +284,8 @@ def create_comment_string(sub):
     """
         Reply with a comment to the XPost
     """
+
+    print ("Attempting to comment")
 
     global X_POST_TITLE
     global ORIGINAL_POST
@@ -405,7 +413,7 @@ while True:
 
     # start a search again after a while
     print("Sleeping...")
-    time.sleep(15)
+    time.sleep(10)
 
     # clear the column to stay in compliance
     clear_column()
