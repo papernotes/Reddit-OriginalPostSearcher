@@ -99,7 +99,6 @@ def run_bot():
 
             # if we can find the original post
             if res:
-                print ("Res found: " + str(res))
                 # the original subreddit will contain the original post
                 orig_sub = REDDIT_CLIENT.get_subreddit(res)
 
@@ -195,7 +194,7 @@ def search_duplicates(sub, result):
         if (SUB_LINK.encode('utf-8') == str(item.url).encode('utf-8') and
                 item.subreddit.display_name.lower().encode('utf-8') == result):
             print ("Found post in other discussions")
-            print ("Title of duplicate: " + str(item.title))
+            print ("Title of duplicate: " + item.title.encode('utf-8'))
             ORIGINAL_POST = item.title.encode('utf-8')
             ORIGINAL_LINK = item.permalink
             AUTHOR = item.author
