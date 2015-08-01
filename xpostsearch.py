@@ -16,7 +16,7 @@ X_POST_DICTIONARY = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
 # list of words to check for so we don't post if source is already there
 ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link',
                      'x-post', 'xpost', 'x-post', 'crosspost', 'cross post',
-                     'cross-post']
+                     'cross-post', 'referenced']
 
 # create the ENGINE for the database
 ENGINE = create_engine(herokuDB.url)
@@ -104,6 +104,8 @@ def run_bot():
 
                 # check to see if there are any "sourced" comments already
                 # check to see if original subreddit is mentioned in comments
+                print ("Checking comments")
+
                 for comment in submission.comments:
                     if (any(string in str(comment)
                             for string in ORIGINAL_COMMENTS) or
