@@ -34,4 +34,4 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "philosophy", "censorship", "conservative", "fatlogic", "historyofideas", "earthprobes",
         "fantasyfootball", "redditarmie", "mistyfront", "reclaimedbynature", "blackpeopletwitter", "gamephysics",
         "programmerhumor", "technology", "worldnews", "youtubehaiku", "movies", "shittyprogramming", "sports",
-        "music", "books", "history", "food", "television", "art", "diy"]
+        "music", "books", "history", "food", "television", "art", "diy", "warhammer", "flicks", "moescape", "asatru"]
