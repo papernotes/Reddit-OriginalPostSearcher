@@ -1,2 +1,3 @@
 list = ["protectandserve", "dataisbeautiful", "scotland", "conspiracy",
-        "hawks", "india", "russia", "kiketown", "disability", "vegan"]
+        "hawks", "india", "russia", "kiketown", "disability", "vegan",
+        "ireland"]
