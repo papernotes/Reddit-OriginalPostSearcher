@@ -10,7 +10,7 @@ The format for a response is:
 Original post referenced from /r/subreddit by /u/user
 *submission title with link*
 ```  
-## FAQ
+# FAQ
 **What's the purpose of this bot?**  
 The bot's purpose is to provide a sort of convenience and sourcing tool for x-posts that occur daily on Reddit. With this bot's comments, the referenced post in an x-post and its author is credited. It also helps save a few clicks, especially for mobile users.  
   
@@ -69,12 +69,12 @@ And many "you have been banned from posting to /r/______"
 
 **Favorite Thread** - [Googling Recursion](https://www.reddit.com/r/nevertellmetheodds/comments/3f8kt3/xpost_rnevertellmetheodds_this_truck_drifting_on/ctmc72u?context=3)
 
-## TODO
+# TODO
 - Do something to deal with unwanted comments (Completed 7/15/2015)
 - Continue to update/optimize bot
 - Continue to update the list of ignored and no-participation subreddits
 
-## Updates
+# Updates
 ```
 1.0.1 (7/15/2015) - Fixed commenting bug that involved the wrong links and added ability to delete unwanted comments  
 1.0.2 (7/16/2015) - Fixed a string checking bug for utf-8 and added logging/print statements  
