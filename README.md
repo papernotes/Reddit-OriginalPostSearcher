@@ -60,7 +60,7 @@ Of course! PM [/u/OriginalPostSearcher](https://www.reddit.com/user/OriginalPost
 And many "you have been banned from posting to /r/____"
   
 
-Favorite Thread - [Googling Recursion](https://www.reddit.com/r/nevertellmetheodds/comments/3f8kt3/xpost_rnevertellmetheodds_this_truck_drifting_on/ctmc72u?context=3)
+**Favorite Thread** - [Googling Recursion](https://www.reddit.com/r/nevertellmetheodds/comments/3f8kt3/xpost_rnevertellmetheodds_this_truck_drifting_on/ctmc72u?context=3)
 
 ## TODO
 - Do something to deal with unwanted comments (Completed 7/15/2015)
