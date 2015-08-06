@@ -38,6 +38,7 @@ Of course! PM [/u/OriginalPostSearcher](https://www.reddit.com/message/compose/?
 ### Positive
 *This is my new favourite bot!* - [Kvothealar](https://www.reddit.com/r/shittyrobots/comments/3ful9e/the_tiniest_firefighter_xpost_rgifs/cts9azi?context=3)  
 *I like this bot. Whoever came up with it did good.* - [CaseH1984](https://www.reddit.com/r/retrogaming/comments/3fsrds/xpost_from_rgaming_guy_3d_prints_a_tiny_nes_case/ctrlm2c?context=3)  
+*Keep up the good work* - [Xfactor5492](https://www.reddit.com/r/CrappyDesign/comments/3ebgyz/girlfriend_wasnt_sure_why_i_laughed_at_her_water/ctdcc4j?context=3)  
 *THE SECOND COMING OF REPOST STATISTICS?! THE PRODIGAL SON HAS RETURNED!* - [StaticDraco](https://www.reddit.com/r/funny/comments/3fn5ds/cop_frees_baby_skunk_from_yogurt_container_xpost/ctql2ey?context=3)  
 *At least the bot gave me credit for my photo :)* - [FoodandFrenchies](https://www.reddit.com/r/burgers/comments/3fo5jb/bacon_avocado_bison_cheeseburger_on_a_homemade/ctqege2?context=3)  
 *I fucking love the bots in this sub. There's a sentence I never thought I'd see myself type.* - [Takatalvi_Ignatio](https://www.reddit.com/r/deathgrips/comments/3flirt/ive_been_playing_waaaay_too_much_poe_for_this_to/ctq3pru?context=3)  
@@ -54,7 +55,6 @@ Of course! PM [/u/OriginalPostSearcher](https://www.reddit.com/message/compose/?
 *Well that is a nifty bot.* - [davidverner](https://www.reddit.com/r/AmIFreeToGo/comments/3f1r2u/crosspost_from_rroadcam_driver_smashes_into_cars/ctkqbb1?context=3)  
 *Hey, I kind of like this. Kudos bot.* - [NewJerseyFreakshow](https://www.reddit.com/r/TopMindsOfReddit/comments/3eq9a4/top_mind_mod_of_coontown_ueugenenix_gets_demodded/cthd8qy?context=3)  
 *What a lovely bot.* - [kevik72](https://www.reddit.com/r/funny/comments/3efuvp/trick_friends_into_thinking_you_have_your_shit/cteiy59?context=3)  
-*Keep up the good work* - [Xfactor5492](https://www.reddit.com/r/CrappyDesign/comments/3ebgyz/girlfriend_wasnt_sure_why_i_laughed_at_her_water/ctdcc4j?context=3)  
 *See, the bot knows how to crosspost. Why can't we all?* - [Duke_Wintermaul](https://www.reddit.com/r/Nerf/comments/3dsi5g/finally_xpost_from_rgifs/ct8t6bx?context=3)  
 *Woah, that's super helpful. I've never seen the x-post bot work like this.* - [jimmycthatsme](https://www.reddit.com/r/woodworking/comments/3e7vja/my_buddy_alan_is_a_woodworker_was_told_his_work/ctcb83q?context=3)
 
