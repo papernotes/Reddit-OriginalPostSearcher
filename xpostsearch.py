@@ -7,7 +7,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.5")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.6")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -61,7 +61,7 @@ def run_bot():
     subreddit = REDDIT_CLIENT.get_subreddit("all")
 
     # get new submissions and see if their titles contain an xpost
-    for submission in subreddit.get_new(limit=300):
+    for submission in subreddit.get_new(limit=250):
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in IGNORED_SUBS or
                 submission.over_18 is True):
@@ -272,7 +272,7 @@ def search_original_sub(original_sub):
     if X_POST_TITLE:
         # for each of the submissions in the 'hot' subreddit, search
         print("Searching 'Hot'")
-        for submission in original_sub.get_hot(limit=300):
+        for submission in original_sub.get_hot(limit=250):
 
             # check to see if the shared content is the same first
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
@@ -360,9 +360,12 @@ def create_comment_string(sub):
                       "  \n[" + ORIGINAL_POST.encode('utf-8') +
                       "](" + ORIGINAL_LINK.encode('utf-8') +
                       ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
-                      "^^your ^^convenience ^^\(Especially ^^for ^^mobile ^^users)"
-                      ".  \n^^PM ^^me ^^if "
-                      "^^you ^^have ^^any ^^questions ^^or ^^suggestions.")
+                      "^^your ^^convenience ^^\(Especially ^^for " +
+                      "^^mobile ^^users).  \n^^[Contact]" +
+                      "(https://www.reddit.com/message/" +
+                      "compose/?to=OriginalPostSearcher)" +
+                      " ^^| ^^[Code](https://github.com/" +
+                      "papernotes/Reddit-OriginalPostSearcher)")
 
     print("\nCommented!")
     print comment_string
