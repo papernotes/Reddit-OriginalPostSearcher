@@ -2,7 +2,7 @@
 [OriginalPostSearcher](https://www.reddit.com/user/OriginalPostSearcher/)  
 A Reddit bot that aims to comment with the original submission of an xpost  
 
-Made as a practice bot with Python for [Reddit](http://www.reddit.com/). I wanted to make something for fun to learn a bit more about Python and databases.  
+Made as a practice bot with Python for [Reddit](http://www.reddit.com/) using [PRAW](https://praw.readthedocs.org/en/v3.1.0/). I wanted to make something for fun to learn a bit more about Python and databases.  
 Thanks to [stackoverflow](http://stackoverflow.com/), [/r/learnpython](http://www.reddit.com/r/learnpython), and [/r/python](http://www.reddit.com/r/python)
 
 The format for a response is:
@@ -11,21 +11,28 @@ Original post referenced from /r/subreddit by /u/user
 *submission title with link*
 ```  
 ## FAQ
-**What's the point of this bot?**  
+**What's the purpose of this bot?**  
 The bot's purpose is to provide a sort of convenience and sourcing tool for x-posts that occur daily on Reddit. With this bot's comments, the referenced post in an x-post and its author is credited. It also helps save a few clicks, especially for mobile users.  
   
-**How does it work?**  
-Basically, the bot looks to find any submission with that might be an x-post, tries to see if it can find the original submission in the subreddit mentioned in the title *e.g. Title of post! (xpost from /r/specific_subreddit)*, and comments to the x-post the title of original submission, the author of that submission, its subreddit, and a link to the original submission. The bot is hosted on Heroku.  
+**Isn't this useless if there's the "other discussions" tab?**  
+I actually did not realize that there was an "other discussions" tab until it was pointed out when this bot was commenting. At that point, I thought that there was actually no point for this bot due to that tab. However, I had a lot of positive reception (see below) and there was the benefit of providing a quick link for mobile users. With that, I decided to continue development of the bot, saving Redditors a few clicks and providing proper crediting. 
   
-**What's the point if there's the "other discussions" tab?**  
-I actually did not realize that there was an "other discussions" tab until it was pointed out when this bot was commenting. At that point, I thought that there was actually no point for this bot due to that tab. However, I had a lot of positive reception (futher down the page) and there was the benefit of providing a quick link for mobile users. With that, I decided to continue development of the bot, saving Redditors a few clicks and providing proper crediting.  
+**How does it work?**  
+Generally speaking, the bot looks to find any submission with that might be an x-post, tries to see if it can find the original submission in the subreddit mentioned in the title *e.g. Title of post! (xpost from /r/specific_subreddit)*, and comments to the x-post the title of original submission, the author of that submission, its subreddit, and a link to the original submission. The bot is hosted on Heroku.  
+  
+**How does the bot search for the original post?**
+I, funnily enough, ended up using the "other discussions", along with several other tiers of searching with PRAW for the bot's code.  
+First, the bot checks the user's previous history, and if that fails, the bot checks the "other discussions" tab. If that fails as well, the bot will look through the referenced subreddit in the title of the x-post and search through the *Hot* and *New* tabs of the subreddit. By that time, the bot will hopefully find the post and comment.
+  
+**What if the x-post author provided the source in the comments already?**  
+The bot has a check just for that! If it doesn't find a possible source in the comments, the bot will go through the process of searching for the original post. By that time, however, the author may have provided the source as well.  
   
 **What about brigading for subreddits that require "np" links?**  
 There is a list of subreddits that the bot provides "np" links -  [nopart.py](https://github.com/papernotes/Reddit-OriginalPostSearcher/blob/master/nopart.py)  
 There is also a list of subreddits that the bot will not comment to -  [ignoredSubs.py](https://github.com/papernotes/Reddit-OriginalPostSearcher/blob/master/ignoredSubs.py)  
   
 **Can I provide a suggestion?**  
-Of course! PM [/u/OriginalPostSearcher](https://www.reddit.com/user/OriginalPostSearcher/), and I'll be happy to look into it.
+Of course! PM [/u/OriginalPostSearcher](https://www.reddit.com/message/compose/?to=OriginalPostSearcher), and I'll be happy to look into it.
   
 # Reception  
 ### Positive
@@ -51,13 +58,13 @@ Of course! PM [/u/OriginalPostSearcher](https://www.reddit.com/user/OriginalPost
 *See, the bot knows how to crosspost. Why can't we all?* - [Duke_Wintermaul](https://www.reddit.com/r/Nerf/comments/3dsi5g/finally_xpost_from_rgifs/ct8t6bx?context=3)  
 *Woah, that's super helpful. I've never seen the x-post bot work like this.* - [jimmycthatsme](https://www.reddit.com/r/woodworking/comments/3e7vja/my_buddy_alan_is_a_woodworker_was_told_his_work/ctcb83q?context=3)
 
-### Not as positive  
+### Not so positive  
 *I hate this bot.* - [MightyDebo](https://www.reddit.com/r/ElderScrolls/comments/3fmo4f/interesting_reference_ive_found_in_skyrim_xpost/ctqigu7?context=3)  
 *Please die mr bot* - [Lurkerphile](https://www.reddit.com/r/skyrim/comments/3fdt5d/i_guess_nazeem_wasnt_as_important_as_he_thought/ctnwrh5?context=3)  
 *Is this bot really necessary? Can't people just click "other discussions" to see this?* - [send-me-to-hell](https://www.reddit.com/r/linux/comments/3f2cix/continual_testing_of_mainline_linux_kernels_xpost/ctkozdh?context=3)  
 *Yeah, we know how to use "other discussions" tab.* - [nakilon](https://www.reddit.com/r/MyPeopleNeedMe/comments/3er1yu/battlefield_4_impressive_helicopter_physics_xpost/cthknhm?context=3)  
   
-And many "you have been banned from posting to /r/____"
+And many "you have been banned from posting to /r/______"
   
 
 **Favorite Thread** - [Googling Recursion](https://www.reddit.com/r/nevertellmetheodds/comments/3f8kt3/xpost_rnevertellmetheodds_this_truck_drifting_on/ctmc72u?context=3)
@@ -65,7 +72,7 @@ And many "you have been banned from posting to /r/____"
 ## TODO
 - Do something to deal with unwanted comments (Completed 7/15/2015)
 - Continue to update/optimize bot
-- Continue to update the list of ignored subreddits
+- Continue to update the list of ignored and no-participation subreddits
 
 ## Updates
 ```
@@ -85,4 +92,5 @@ And many "you have been banned from posting to /r/____"
                     mobile users, and updated ignoredSubs list
 1.1.4 (7/29/2015) - Added ability to create no participation links for certain subreddits
 1.1.5 (7/30/2015) - Added ability to look through poster's previous posts to save time searching
+1.1.6 (8/05/2015) - Changed commenting to include link to Github repo
 ```
