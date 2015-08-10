@@ -234,7 +234,7 @@ def search_user_posts(poster_name, result, sub_id):
         if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
             submission.id != sub_id):
             print ("Found post in user's previous posts")
-            print ("Title of post: " + str(submission.title))
+            print ("Title of post: " + str(submission.title).encode('utf-8'))
             ORIGINAL_POST = submission.title.encode('utf-8')
             ORIGINAL_LINK = submission.permalink
             AUTHOR = submission.author
@@ -351,7 +351,7 @@ def create_comment_string(sub):
             "www.reddit.com/r/" in ORIGINAL_LINK):
         print ("Using No Participation link")
         original_link_list = ORIGINAL_LINK.split("https://www.")
-        ORIGINAL_LINK = "np." + original_link_list[1]
+        ORIGINAL_LINK = "http://np." + original_link_list[1]
 
     # Create the string to comment with
     comment_string = ("Original Post referenced from /r/" +
@@ -404,7 +404,7 @@ def delete_negative():
         Delete badly received comments
     """
     user = REDDIT_CLIENT.get_redditor('OriginalPostSearcher')
-    submitted = user.get_comments(limit=250)
+    submitted = user.get_comments(limit=200)
     for item in submitted:
         if int(item.score) < 0:
             print("\nDeleted negative comment\n        " + str(item))
