@@ -7,12 +7,13 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.6")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.7")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
 X_POST_DICTIONARY = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
-                     'cross-post']
+                     'cross-post', "xposted", "crossposted", "x-posted"]
+
 # list of words to check for so we don't post if source is already there
 ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link',
                      'x-post', 'xpost', 'x-post', 'crosspost', 'cross post',
@@ -30,6 +31,7 @@ NO_PARTICIPATION = nopart.list
 X_POST_TITLE = ''        # the xpost title
 ORIGINAL_POST = ''       # the original submission
 ORIGINAL_LINK = ''       # the original submission link
+ORIGINAL_SUBREDDIT = ''  # the original submission's subreddit
 SUB_LINK = None          # the submission shared link
 CACHE = []               # the searched posts
 TEMP_CACHE = []          # temporary CACHE to get from database
@@ -40,7 +42,6 @@ def run_bot():
     """
         Main driver of the bot
     """
-
     global SUB_LINK
     global CACHE
 
@@ -57,11 +58,11 @@ def run_bot():
         if value not in CACHE:
             CACHE.append(str(value))
 
-    # go into the all subreddit
-    subreddit = REDDIT_CLIENT.get_subreddit("all")
+    # get only new xposts
+    xpost_submissions = get_new_xposts(X_POST_DICTIONARY)
 
-    # get new submissions and see if their titles contain an xpost
-    for submission in subreddit.get_new(limit=250):
+    # search for the xpost_submissions
+    for submission in xpost_submissions:
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in IGNORED_SUBS or
                 submission.over_18 is True):
@@ -108,8 +109,7 @@ def run_bot():
 
                 for comment in submission.comments:
                     if (any(string in str(comment)
-                            for string in ORIGINAL_COMMENTS) or
-                            str(comment).find(res) == -1):
+                            for string in ORIGINAL_COMMENTS)):
                         print("Source in comments found: ")
                         print(str(comment) + "\n")
                         res = False
@@ -136,6 +136,27 @@ def run_bot():
         # save submission to not recomment
         else:
             write_to_file(submission.id)
+
+
+def get_new_xposts(xpost_dict):
+    """
+        Searches to get new and most recent xposts
+    """
+    print "Getting new xposts"
+
+    # Append to a list that will be returned
+    xpost_list = []
+
+    # For each string in the xpost dictionary, search for new
+    for entry in xpost_dict:
+
+        xpost_titles = REDDIT_CLIENT.search(entry, sort="new")
+
+        # For each search, append those items into the xpost_list
+        for item in xpost_titles:
+            xpost_list.append(item)
+
+    return xpost_list
 
 
 def get_original_sub(title):
@@ -183,6 +204,7 @@ def search_duplicates(sub, result):
     global SUB_LINK
     global ORIGINAL_POST
     global ORIGINAL_LINK
+    global ORIGINAL_SUBREDDIT
     global AUTHOR
 
     print("Searching other discussions")
@@ -200,6 +222,7 @@ def search_duplicates(sub, result):
             print ("Title of duplicate: " + item.title.encode('utf-8'))
             ORIGINAL_POST = item.title.encode('utf-8')
             ORIGINAL_LINK = item.permalink
+            ORIGINAL_SUBREDDIT = str(item.subreddit)
             AUTHOR = item.author
             return True
         else:
@@ -218,6 +241,7 @@ def search_user_posts(poster_name, result, sub_id):
     global SUB_LINK
     global ORIGINAL_POST
     global ORIGINAL_LINK
+    global ORIGINAL_SUBREDDIT
     global AUTHOR
 
     print ("Searching user's previous posts")
@@ -237,6 +261,7 @@ def search_user_posts(poster_name, result, sub_id):
             print ("Title of post: " + str(submission.title).encode('utf-8'))
             ORIGINAL_POST = submission.title.encode('utf-8')
             ORIGINAL_LINK = submission.permalink
+            ORIGINAL_SUBREDDIT = str(submission.subreddit)
             AUTHOR = submission.author
             return True
         else:
@@ -256,6 +281,7 @@ def search_original_sub(original_sub):
     global SUB_LINK
     global ORIGINAL_POST
     global ORIGINAL_LINK
+    global ORIGINAL_SUBREDDIT
     global AUTHOR
 
     print("Searching original subreddit...")
@@ -272,12 +298,13 @@ def search_original_sub(original_sub):
     if X_POST_TITLE:
         # for each of the submissions in the 'hot' subreddit, search
         print("Searching 'Hot'")
-        for submission in original_sub.get_hot(limit=250):
+        for submission in original_sub.get_hot(limit=200):
 
             # check to see if the shared content is the same first
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
+                ORIGINAL_SUBREDDIT = str(submission.subreddit)
                 AUTHOR = submission.author
                 print ("Shared content is the same")
                 return True
@@ -287,6 +314,7 @@ def search_original_sub(original_sub):
                     if X_POST_TITLE == submission.title.lower():
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
+                        ORIGINAL_SUBREDDIT = str(submission.subreddit)
                         AUTHOR = submission.author
                         print ("XPost Title is the same")
                         return True
@@ -295,11 +323,12 @@ def search_original_sub(original_sub):
 
         print("Searching 'New'")
         # if we can't find the cross post in get_hot
-        for submission in original_sub.get_new(limit=250):
+        for submission in original_sub.get_new(limit=200):
             # check to see if the shared content is the same first
             if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
+                ORIGINAL_SUBREDDIT = str(submission.subreddit)
                 AUTHOR = submission.author
                 print ("Shared content is the same")
                 return True
@@ -309,6 +338,7 @@ def search_original_sub(original_sub):
                     if X_POST_TITLE == submission.title.lower():
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
+                        ORIGINAL_SUBREDDIT = str(submission.subreddit)
                         AUTHOR = submission.author
                         print ("XPost Title is the same")
                         return True
@@ -332,6 +362,7 @@ def create_comment_string(sub):
     global X_POST_TITLE
     global ORIGINAL_POST
     global ORIGINAL_LINK
+    global ORIGINAL_SUBREDDIT
     global AUTHOR
 
     # set the original_sub fix
@@ -355,8 +386,7 @@ def create_comment_string(sub):
 
     # Create the string to comment with
     comment_string = ("Original Post referenced from /r/" +
-                      get_original_sub(sub.title).encode('utf-8') +
-                      " by " + AUTHOR +
+                      ORIGINAL_SUBREDDIT + " by " + AUTHOR +
                       "  \n[" + ORIGINAL_POST.encode('utf-8') +
                       "](" + ORIGINAL_LINK.encode('utf-8') +
                       ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
@@ -367,13 +397,14 @@ def create_comment_string(sub):
                       " ^^| ^^[Code](https://github.com/" +
                       "papernotes/Reddit-OriginalPostSearcher)")
 
-    print("\nCommented!")
     print comment_string
 
     # add the comment to the submission
     sub.add_comment(comment_string)
+
     # upvote for proper camaraderie
     sub.upvote()
+    print("\nCommented!")
 
 
 def get_title(title):

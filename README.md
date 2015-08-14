@@ -93,4 +93,5 @@ And many "you have been banned from posting to /r/______"
 1.1.4 (7/29/2015) - Added ability to create no participation links for certain subreddits
 1.1.5 (7/30/2015) - Added ability to look through poster's previous posts to save time searching
 1.1.6 (8/05/2015) - Changed commenting to include link to Github repo
+1.1.7 (8/13/2015) - Added ability to search specifically for xposts to save time going through non-xposts
 ```

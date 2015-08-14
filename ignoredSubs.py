@@ -36,4 +36,6 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "programmerhumor", "technology", "worldnews", "youtubehaiku", "movies", "shittyprogramming", "sports",
         "music", "books", "history", "food", "television", "art", "diy", "warhammer", "flicks", "moescape", "asatru",
         "cringepics", "getmotivated", "conspiratard", "mindcrack", "soccer", "troy", "femradebates", "pussypassdenied",
-        "lotr", "delaware", "foreveralone", "trollxchromosomes", "netsec"]
+        "lotr", "delaware", "foreveralone", "trollxchromosomes", "netsec", "tiara", "horror", "funny", "gif",
+        "nationalpark", "celebs", "prettygirls", "surpriseddogs", "bellathorne", "delawarepolitics",
+        "gunsarecool", "stardustcrusaders", "creepypms"]
