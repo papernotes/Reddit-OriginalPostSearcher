@@ -385,7 +385,7 @@ def create_comment_string(sub):
         ORIGINAL_LINK = "http://np." + original_link_list[1]
 
     # Create the string to comment with
-    comment_string = ("Original Post referenced from /r/" +
+    comment_string = ("X-Post referenced from /r/" +
                       ORIGINAL_SUBREDDIT + " by " + AUTHOR +
                       "  \n[" + ORIGINAL_POST.encode('utf-8') +
                       "](" + ORIGINAL_LINK.encode('utf-8') +
