@@ -11,8 +11,8 @@ REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.7")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
-X_POST_DICTIONARY = ['xpost', 'x post', 'x-post', 'crosspost', 'cross post',
-                     'cross-post', "xposted", "crossposted", "x-posted"]
+X_POST_DICTIONARY = ["xpost", "x-post", "crosspost","cross-post",
+                     "xposted", "crossposted", "x-posted"]
 
 # list of words to check for so we don't post if source is already there
 ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link',
@@ -58,7 +58,7 @@ def run_bot():
         if value not in CACHE:
             CACHE.append(str(value))
 
-    # get only new xposts
+    # get xposts
     xpost_submissions = get_new_xposts(X_POST_DICTIONARY)
 
     # search for the xpost_submissions
@@ -111,13 +111,13 @@ def run_bot():
                     if (any(string in str(comment)
                             for string in ORIGINAL_COMMENTS)):
                         print("Source in comments found: ")
-                        print(str(comment) + "\n")
+                        print("     " + str(comment.body) + "\n")
                         res = False
                         break
 
                 # if we can find the original submission, comment
                 if res and (search_user_posts(submission.author.name, 
-                            res, submission.id) or
+                            res, submission.id, submission) or
                             search_duplicates(submission, res) or
                             search_original_sub(orig_sub)):
                     try:
@@ -136,6 +136,8 @@ def run_bot():
         # save submission to not recomment
         else:
             write_to_file(submission.id)
+
+    print "\n"
 
 
 def get_new_xposts(xpost_dict):
@@ -164,19 +166,22 @@ def get_original_sub(title):
         Returns title of original subreddit
     """
 
-    print("Getting original subreddit of: " + str(title))
+    try:
+        print("Getting original subreddit of: " + str(title))
+    except:
+        pass
+
     global X_POST_TITLE
 
     X_POST_TITLE = get_title(title)
 
     # Attempt to find the first /r/ phrase/subreddit
     try:
-        # split the title into a list of words
         title = title.split()
 
         # for each element in that title, look for '/r/'
         for word in title:
-            # if it's found, strip the '/r/' and return the subreddit
+            # split for "/r/" format
             if '/r/' in word:
                 # split from /r/
                 word = word.split('/r/')[1]
@@ -184,8 +189,8 @@ def get_original_sub(title):
                 word = word.split(']')[0]   # try for brackets
                 print("/r/ word = " + word.encode('utf-8'))
                 return word
+            # split for "r/" only format
             elif 'r/' in word:
-                # split for r/
                 word = word.split('r/')[1]
                 word = word.split(')')[0]   # try for parentheses first
                 word = word.split(']')[0]   # try for brackets
@@ -213,17 +218,25 @@ def search_duplicates(sub, result):
     duplicates = sub.get_duplicates(limit=50)
 
     # check to see if the content contains our subreddit
-    for item in duplicates:
-        print ("Item is " + str(item))
+    for submission in duplicates:
+        print ("Duplicate submission is " + str(submission))
+
         # check if the url and subreddit is the same
-        if (SUB_LINK.encode('utf-8') == str(item.url).encode('utf-8') and
-                item.subreddit.display_name.lower().encode('utf-8') == result):
+        if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
+                submission.subreddit.display_name.lower().encode('utf-8') == result):
             print ("Found post in other discussions")
-            print ("Title of duplicate: " + item.title.encode('utf-8'))
-            ORIGINAL_POST = item.title.encode('utf-8')
-            ORIGINAL_LINK = item.permalink
-            ORIGINAL_SUBREDDIT = str(item.subreddit)
-            AUTHOR = item.author
+            print ("Title of duplicate: " + submission.title.encode('utf-8'))
+
+            # Double check if actual referenced post
+            if str(get_original_sub(sub.title)) == str(submission.subreddit):
+                ORIGINAL_SUBREDDIT = str(submission.subreddit)
+            else:
+                print "Double check failed in duplicates"
+                return False
+
+            ORIGINAL_POST = submission.title.encode('utf-8')
+            ORIGINAL_LINK = submission.permalink
+            AUTHOR = submission.author
             return True
         else:
             print("Can't find in other discussions")
@@ -233,7 +246,7 @@ def search_duplicates(sub, result):
     return False
 
 
-def search_user_posts(poster_name, result, sub_id):
+def search_user_posts(poster_name, result, sub_id, sub):
     """
         Checks user's previous posts
     """
@@ -257,11 +270,19 @@ def search_user_posts(poster_name, result, sub_id):
         # Check to see if the link is the same
         if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
             submission.id != sub_id):
+
             print ("Found post in user's previous posts")
             print ("Title of post: " + str(submission.title).encode('utf-8'))
+
+            # Double check if actual referenced post
+            if str(get_original_sub(sub.title)) == str(submission.subreddit):
+                ORIGINAL_SUBREDDIT = str(submission.subreddit)
+            else:
+                print "Double check failed in previous posts"
+                return False
+
             ORIGINAL_POST = submission.title.encode('utf-8')
             ORIGINAL_LINK = submission.permalink
-            ORIGINAL_SUBREDDIT = str(submission.subreddit)
             AUTHOR = submission.author
             return True
         else:
@@ -344,6 +365,7 @@ def search_original_sub(original_sub):
                         return True
                 except:
                     pass
+
         # if we can't find the original post
         print("Could not find original post - Hot/New Search Failed")
         return False
@@ -365,17 +387,11 @@ def create_comment_string(sub):
     global ORIGINAL_SUBREDDIT
     global AUTHOR
 
-    # set the original_sub fix
-    original_sub = get_original_sub(sub.title)
-    # None fix
-    if original_sub == 'None':
-        return
     # Author fix
     if not AUTHOR:
         AUTHOR = "a [deleted] user"
     else:
         AUTHOR = "/u/" + str(AUTHOR)
-
 
     # no participation link
     if (sub.subreddit.display_name.lower() in NO_PARTICIPATION and
@@ -397,7 +413,7 @@ def create_comment_string(sub):
                       " ^^| ^^[Code](https://github.com/" +
                       "papernotes/Reddit-OriginalPostSearcher)")
 
-    print comment_string
+    print ("\n" + comment_string)
 
     # add the comment to the submission
     sub.add_comment(comment_string)
@@ -411,7 +427,11 @@ def get_title(title):
     """
         Gets the title of the XPost for comparison
     """
-    print("Getting the title of: " + str(title))
+    try:
+        print("Getting the title of: " + str(title))
+    except:
+        pass
+
     # format TITLE(xpost)
     if (len(title) == title.find(')') + 1):
         return title.split('(')[0]
@@ -472,12 +492,12 @@ def clear_database():
     global CACHE
 
     num_rows = ENGINE.execute("select * from searched_posts")
-    if (num_rows.rowcount > 2000):
+    if (num_rows.rowcount > 1000):
         ENGINE.execute("delete from searched_posts")
         print("Cleared database")
 
-    if len(CACHE) > 2000:
-        # Cut CACHE in half, keep last half
+    # cut cache in half if needed
+    if len(CACHE) > 1000:
         CACHE = CACHE[int(len(CACHE))/2:]
         print ("Halved CACHE")
 
@@ -492,12 +512,9 @@ while True:
     # reset the CACHE
     TEMP_CACHE = []
 
-    # delete unwanted posts if there are any
     delete_negative()
 
-    # start a search again after a while
     print("Sleeping...")
     time.sleep(10)
 
-    # clear the column to stay in compliance
     clear_database()

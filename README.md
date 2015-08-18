@@ -5,6 +5,8 @@ A Reddit bot that aims to comment with the original submission of an xpost
 Made as a practice bot with Python for [Reddit](http://www.reddit.com/) using [PRAW](https://praw.readthedocs.org/en/v3.1.0/). I wanted to make something for fun to learn a bit more about Python and databases.  
 Thanks to [stackoverflow](http://stackoverflow.com/), [/r/learnpython](http://www.reddit.com/r/learnpython), and [/r/python](http://www.reddit.com/r/python)
 
+~About 7k Karma in 1 Month :D
+
 The format for a response is:
 ```
 Original post referenced from /r/subreddit by /u/user

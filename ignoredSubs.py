@@ -38,4 +38,5 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "cringepics", "getmotivated", "conspiratard", "mindcrack", "soccer", "troy", "femradebates", "pussypassdenied",
         "lotr", "delaware", "foreveralone", "trollxchromosomes", "netsec", "tiara", "horror", "funny", "gif",
         "nationalpark", "celebs", "prettygirls", "surpriseddogs", "bellathorne", "delawarepolitics",
-        "gunsarecool", "stardustcrusaders", "creepypms"]
+        "gunsarecool", "stardustcrusaders", "creepypms", "bears", "space", "denmark", "ireland", "damnthatsinteresting",
+        "thriftstorehauls"]
