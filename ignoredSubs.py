@@ -1,4 +1,4 @@
-list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicagosuburbs", 
+ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicagosuburbs", 
     	"cosplay", "cumberbitches", "d3gf", "deer", "depression", "depthhub", 
     	"drinkingdollars", "forwardsfromgrandma", "geckos", "giraffes", 
     	"grindsmygears", "misc", "mixedbreeds", "news", "newtotf2", "omaha", "petstacking", 
@@ -11,7 +11,7 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "wheredidthesodago", "gentlemanboners", "cats", "business", "holdmybeer", "beer",
         "pcgaming", "motorcycles", "xboxone", "mma", "productivity", "parenting", "horror"
         "enhancement", "biology", "apphookup", "sanfrancisco", "singularity", "transhuman",
-        "trucks", "evangelion", "listentous", "multihub", "woahpoon", "careerguidance", "ebola"
+        "trucks", "evangelion", "listentous", "multihub", "woahpoon", "careerguidance", "ebola",
         "keming", "aliens", "horses", "internationalpolitics", "libraries", "amazon", "harley",
         "graphicnovels", "dualsport", "milwaukee", "blackops3", "soundsvintage", "fullmoviesonline",
         "calamariraceteam", "listentoobscure", "blackberry", "supermoto", "european", "diesel",
@@ -39,4 +39,4 @@ list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicago
         "lotr", "delaware", "foreveralone", "trollxchromosomes", "netsec", "tiara", "horror", "funny", "gif",
         "nationalpark", "celebs", "prettygirls", "surpriseddogs", "bellathorne", "delawarepolitics",
         "gunsarecool", "stardustcrusaders", "creepypms", "bears", "space", "denmark", "ireland", "damnthatsinteresting",
-        "thriftstorehauls"]
+        "thriftstorehauls", "metalgearsolidv_pc", "etimusic", "rage", "osha"]

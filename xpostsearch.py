@@ -23,10 +23,10 @@ ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link',
 ENGINE = create_engine(herokuDB.url)
 
 # don't bother these subs
-IGNORED_SUBS = ignoredSubs.list
+IGNORED_SUBS = ignoredSubs.ignore_list
 
 # No participation link subs
-NO_PARTICIPATION = nopart.list
+NO_PARTICIPATION = nopart.nopart_list
 
 X_POST_TITLE = ''        # the xpost title
 ORIGINAL_POST = ''       # the original submission
