@@ -39,4 +39,6 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "lotr", "delaware", "foreveralone", "trollxchromosomes", "netsec", "tiara", "horror", "funny", "gif",
         "nationalpark", "celebs", "prettygirls", "surpriseddogs", "bellathorne", "delawarepolitics",
         "gunsarecool", "stardustcrusaders", "creepypms", "bears", "space", "denmark", "ireland", "damnthatsinteresting",
-        "thriftstorehauls", "metalgearsolidv_pc", "etimusic", "rage", "osha"]
+        "thriftstorehauls", "metalgearsolidv_pc", "etimusic", "rage", "osha", "zettairyouiki", "gameofthrones", "sinotibetan",
+        "hopheadsde", "thailand", "romania", "photoshopfail", "cynicalbrit", "serverporn", "whatcouldgowrong",
+        "kanmusu", "hardware", "sociology", "conspiracy", "perfecttiming"]

@@ -223,7 +223,8 @@ def search_duplicates(sub, result):
 
         # check if the url and subreddit is the same
         if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
-                submission.subreddit.display_name.lower().encode('utf-8') == result):
+                submission.subreddit.display_name.lower().encode('utf-8') == result and
+                submission.over_18 is False):
             print ("Found post in other discussions")
             print ("Title of duplicate: " + submission.title.encode('utf-8'))
 
@@ -269,7 +270,7 @@ def search_user_posts(poster_name, result, sub_id, sub):
     for submission in submissions:
         # Check to see if the link is the same
         if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
-            submission.id != sub_id):
+            submission.id != sub_id and submission.over_18 is False):
 
             print ("Found post in user's previous posts")
             print ("Title of post: " + str(submission.title).encode('utf-8'))
@@ -322,7 +323,9 @@ def search_original_sub(original_sub):
         for submission in original_sub.get_hot(limit=200):
 
             # check to see if the shared content is the same first
-            if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
+            if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8') and
+                submission.over_18 is False):
+
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
                 ORIGINAL_SUBREDDIT = str(submission.subreddit)
@@ -332,7 +335,9 @@ def search_original_sub(original_sub):
             else:
                 # check to see if the string is in the title
                 try:
-                    if X_POST_TITLE == submission.title.lower():
+                    if (X_POST_TITLE == submission.title.lower() and
+                        submission.over_18 is False):
+
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
                         ORIGINAL_SUBREDDIT = str(submission.subreddit)
@@ -346,7 +351,9 @@ def search_original_sub(original_sub):
         # if we can't find the cross post in get_hot
         for submission in original_sub.get_new(limit=200):
             # check to see if the shared content is the same first
-            if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8')):
+            if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8') and
+                submission.over_18 is False):
+
                 ORIGINAL_POST = submission.title.encode('utf-8')
                 ORIGINAL_LINK = submission.permalink
                 ORIGINAL_SUBREDDIT = str(submission.subreddit)
@@ -356,7 +363,9 @@ def search_original_sub(original_sub):
             else:
                 # check to see if the string is in the title
                 try:
-                    if X_POST_TITLE == submission.title.lower():
+                    if (X_POST_TITLE == submission.title.lower() and
+                        submission.over_18 is False):
+
                         ORIGINAL_POST = submission.title.encode('utf-8')
                         ORIGINAL_LINK = submission.permalink
                         ORIGINAL_SUBREDDIT = str(submission.subreddit)
