@@ -7,7 +7,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.7")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.8")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -58,20 +58,17 @@ def run_bot():
         if value not in CACHE:
             CACHE.append(str(value))
 
-    # get xposts
     xpost_submissions = get_new_xposts(X_POST_DICTIONARY)
 
-    # search for the xpost_submissions
     for submission in xpost_submissions:
         # make sure we don't go into certain subreddits
         if (submission.subreddit.display_name.lower() in IGNORED_SUBS or
                 submission.over_18 is True):
             write_to_file(submission.id)
             continue
-        # save the submission's title
+
         post_title = submission.title.lower()
 
-        # change into utf-8
         try:
             post_title = post_title.encode('utf-8')
         except:
@@ -84,13 +81,10 @@ def run_bot():
             print("subreddit = " + str(submission.subreddit.display_name.lower()))
             print("post title = " + post_title)
 
-            # set the SUB_LINK
             SUB_LINK = submission.url
 
-            # save submission to not recomment
             write_to_file(submission.id)
 
-            # get the original subreddit title
             res = get_original_sub(post_title)
 
             # to fix NoneType error, for accented/special chars
@@ -98,7 +92,6 @@ def run_bot():
                 print("Res is None - Other Format/Accented/Special Chars")
                 res = False
 
-            # if we can find the original post
             if res:
                 # the original subreddit will contain the original post
                 orig_sub = REDDIT_CLIENT.get_subreddit(res)
@@ -128,12 +121,10 @@ def run_bot():
                         print ("Commenting failed")
                         res = False
 
-            # if we can't find the original post
             else:
                 print ("No res")
                 write_to_file(submission.id)
 
-        # save submission to not recomment
         else:
             write_to_file(submission.id)
 
@@ -146,15 +137,12 @@ def get_new_xposts(xpost_dict):
     """
     print "Getting new xposts"
 
-    # Append to a list that will be returned
     xpost_list = []
 
-    # For each string in the xpost dictionary, search for new
     for entry in xpost_dict:
 
         xpost_titles = REDDIT_CLIENT.search(entry, sort="new")
 
-        # For each search, append those items into the xpost_list
         for item in xpost_titles:
             xpost_list.append(item)
 
@@ -264,7 +252,6 @@ def search_user_posts(poster_name, result, sub_id, sub):
     poster_name = poster_name.encode('utf-8')
     poster = REDDIT_CLIENT.get_redditor(poster_name)
 
-    # get the submissions and search
     submissions = poster.get_submitted(limit=100)
 
     for submission in submissions:

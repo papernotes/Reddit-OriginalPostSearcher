@@ -41,4 +41,6 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "gunsarecool", "stardustcrusaders", "creepypms", "bears", "space", "denmark", "ireland", "damnthatsinteresting",
         "thriftstorehauls", "metalgearsolidv_pc", "etimusic", "rage", "osha", "zettairyouiki", "gameofthrones", "sinotibetan",
         "hopheadsde", "thailand", "romania", "photoshopfail", "cynicalbrit", "serverporn", "whatcouldgowrong",
-        "kanmusu", "hardware", "sociology", "conspiracy", "perfecttiming"]
+        "kanmusu", "hardware", "sociology", "conspiracy", "perfecttiming", "largeimages", "republican", "dnb",
+        "eatcheapandhealthy", "food", "foodporn", "agarioball", "codzombies", "listentothis", "europe", "bouldering",
+        "euromusic", "barca"]
