@@ -43,4 +43,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "hopheadsde", "thailand", "romania", "photoshopfail", "cynicalbrit", "serverporn", "whatcouldgowrong",
         "kanmusu", "hardware", "sociology", "conspiracy", "perfecttiming", "largeimages", "republican", "dnb",
         "eatcheapandhealthy", "food", "foodporn", "agarioball", "codzombies", "listentothis", "europe", "bouldering",
-        "euromusic", "barca", "destinythegame", "polandball", "stateball", "planetball", "polandballart"]
+        "euromusic", "barca", "destinythegame", "polandball", "stateball", "planetball", "polandballart", "panda",
+        "fpvracing"]
