@@ -98,4 +98,5 @@ And many "you have been banned from posting to /r/______"
 1.1.6 (8/05/2015) - Changed commenting to include link to Github repo
 1.1.7 (8/13/2015) - Added ability to search specifically for xposts to save time going through non-xposts
 1.1.8 (8/30/2015) - Added check to make sure content is as work safe as possible
+1.1.9 (9/18/2015) - Added secondary check to make sure no source comments are found after setting up comment
 ```

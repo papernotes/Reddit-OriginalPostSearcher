@@ -7,7 +7,7 @@ import herokuDB
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.8")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.9")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -97,16 +97,7 @@ def run_bot():
                 orig_sub = REDDIT_CLIENT.get_subreddit(res)
 
                 # check to see if there are any "sourced" comments already
-                # check to see if original subreddit is mentioned in comments
-                print ("Checking comments")
-
-                for comment in submission.comments:
-                    if (any(string in str(comment)
-                            for string in ORIGINAL_COMMENTS)):
-                        print("Source in comments found: ")
-                        print("     " + str(comment.body) + "\n")
-                        res = False
-                        break
+                res = search_comments(submission)
 
                 # if we can find the original submission, comment
                 if res and (search_user_posts(submission.author.name, 
@@ -120,6 +111,8 @@ def run_bot():
                     except:
                         print ("Commenting failed")
                         res = False
+                else:
+                    write_to_file(submission.id)
 
             else:
                 print ("No res")
@@ -129,6 +122,22 @@ def run_bot():
             write_to_file(submission.id)
 
     print "\n"
+
+
+def search_comments(sub):
+    """
+        Search comments for sourced material
+    """
+    print "Searching comments"
+    for comment in sub.comments:
+        if (any(string in str(comment)
+                for string in ORIGINAL_COMMENTS)):
+            print("Source in comments found: ")
+            print("     " + str(comment.body) + "\n")
+            return False
+
+    print "No 'source' comments found"
+    return True
 
 
 def get_new_xposts(xpost_dict):
@@ -411,12 +420,15 @@ def create_comment_string(sub):
 
     print ("\n" + comment_string)
 
-    # add the comment to the submission
-    sub.add_comment(comment_string)
+    if search_comments(sub):
+        # add the comment to the submission
+        sub.add_comment(comment_string)
 
-    # upvote for proper camaraderie
-    sub.upvote()
-    print("\nCommented!")
+        # upvote for proper camaraderie
+        sub.upvote()
+        print("\nCommented!")
+    else:
+        print "Source found"
 
 
 def get_title(title):
