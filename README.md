@@ -75,7 +75,7 @@ And many "you have been banned from posting to /r/______"
 - Do something to deal with unwanted comments (Completed 7/15/2015)
 - Continue to update/optimize bot
 - Continue to update the list of ignored and no-participation subreddits
-- Code refactoring could probably be done
+- Code refactoring could probably be done (It's quite messy at the moment)
 
 # Updates
 ```

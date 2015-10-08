@@ -45,4 +45,6 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "eatcheapandhealthy", "food", "foodporn", "agarioball", "codzombies", "listentothis", "europe", "bouldering",
         "euromusic", "barca", "destinythegame", "polandball", "stateball", "planetball", "polandballart", "panda",
         "fpvracing", "denvernuggets", "freethought", "aquariums", "vive", "specart", "animation", "comics",
-        "steroids", "arkansas", "slammedtrucks", "oc_cars", "happygifs"]
+        "steroids", "arkansas", "slammedtrucks", "oc_cars", "happygifs", "nba", "pizza", "abcdesis", "linguistics",
+        "photography", "syriancivilwar", "progolf", "altbriggs", "headpats", "beautifulfemales", "bakchodi",
+        "wec", "blancpain"]
