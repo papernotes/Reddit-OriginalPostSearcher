@@ -47,4 +47,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "fpvracing", "denvernuggets", "freethought", "aquariums", "vive", "specart", "animation", "comics",
         "steroids", "arkansas", "slammedtrucks", "oc_cars", "happygifs", "nba", "pizza", "abcdesis", "linguistics",
         "photography", "syriancivilwar", "progolf", "altbriggs", "headpats", "beautifulfemales", "bakchodi",
-        "wec", "blancpain"]
+        "wec", "blancpain", "consoleproletariat", "blackandgold", "imaginarymonsters", "imaginarylandscapes",
+        "imaginarycharacters", "adorableart", "bengals", "soma", "frontpage", "whatisthis", "lawschool"]

@@ -1,13 +1,13 @@
 """ OriginalPostSearcher bot """
-import praw
-import time
+import herokuDB
 import ignoredSubs
 import nopart
-import herokuDB
+import praw
+import time
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.1.9")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.2.0")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -28,501 +28,335 @@ IGNORED_SUBS = ignoredSubs.ignore_list
 # No participation link subs
 NO_PARTICIPATION = nopart.nopart_list
 
-X_POST_TITLE = ''        # the xpost title
-ORIGINAL_POST = ''       # the original submission
-ORIGINAL_LINK = ''       # the original submission link
-ORIGINAL_SUBREDDIT = ''  # the original submission's subreddit
-SUB_LINK = None          # the submission shared link
-CACHE = []               # the searched posts
-TEMP_CACHE = []          # temporary CACHE to get from database
-AUTHOR = ''              # the author of the submission
+
+class SearchBot(object):
+    def __init__(self):
+        self.xpost_dict = X_POST_DICTIONARY
+        self.engine = ENGINE
+        self.ignored_subs = IGNORED_SUBS
+
+        # cache for database
+        self.cache = []
+        self.temp_cache = []
+        self.xpost_submissions = []
+
+        # fields for the xposted submission
+        self.xpost_url = None                   # link shared in the submission
+        self.xpost_permalink = None
+        self.xpost_title = None
+        self.xpost_author = None
+
+        # fields for the original subreddit
+        self.original_sub = None                # subreddit object
+        self.original_sub_title = None          # title of the subreddit
+        self.original_title = None
+        self.original_permalink = None
+        self.original_author = None
 
 
-def run_bot():
-    """
-        Main driver of the bot
-    """
-    global SUB_LINK
-    global CACHE
+    def setup_database_cache(self):
+        result = self.engine.execute("select * from searched_posts")
 
-    # set up the searched posts CACHE so we don't recomment
-    # get the values in the table
-    result = ENGINE.execute("select * from searched_posts")
+        for row in result:
+            self.temp_cache.append(str(row[0]))
 
-    # set up the TEMP_CACHE
-    for row in result:
-        TEMP_CACHE.append(str(row[0]))
+        for value in self.temp_cache:
+            if value not in self.cache:
+                self.cache.append(str(value))
 
-    # set up the CACHE
-    for value in TEMP_CACHE:
-        if value not in CACHE:
-            CACHE.append(str(value))
 
-    xpost_submissions = get_new_xposts(X_POST_DICTIONARY)
+    def set_xpost_submissions(self, search_terms, client):
+        """
+            Searches for the most recent xposts and sets it
+        """
+        print "Finding xposts"
+        for entry in search_terms:
+            for title in client.search(entry, sort="new"):
+                self.xpost_submissions.append(title)
 
-    for submission in xpost_submissions:
-        # make sure we don't go into certain subreddits
-        if (submission.subreddit.display_name.lower() in IGNORED_SUBS or
-                submission.over_18 is True):
-            write_to_file(submission.id)
-            continue
 
-        post_title = submission.title.lower()
+    def write_to_file(self, sub_id):
+        """
+            Saves the submission we just searched
+        """
+        if not self.id_added(sub_id):
+            temp_text = text('insert into searched_posts (post_id) values(:postID)')
+            self.engine.execute(temp_text, postID=sub_id)
 
+
+    def id_added(self, sub_id):
+        id_added_text = text("select * from searched_posts where post_id = :postID")
+        return self.engine.execute(id_added_text, postID=sub_id).rowcount != 0
+
+
+    def is_xpost(self, submission):
+        submission_title = submission.title.lower()
         try:
-            post_title = post_title.encode('utf-8')
+            submission_title = submission_title.encode('utf-8')
+        except:
+            pass
+            return False
+        return any(string in submission_title for string in self.xpost_dict)
+
+
+    def get_xpost_title(self, title):
+        # format TITLE(xpost)
+        if (len(title) == title.find(')') + 1):
+            return title.split('(')[0]
+        # format TITLE[xpost]
+        elif (len(title) == title.find(']') + 1):
+            return title.split('[')[0]
+        # format (xpost)TITLE
+        elif (title.find('(') == 0):
+            return title.split(')')[1]
+        # format [xpost]TITLE
+        elif (title.find('[') == 0):
+            return title.split('[')[1]
+        # weird format, return false
+        else:
+            print ("Couldn't get title correctly")
+            return None
+
+
+    def get_original_sub(self):
+        try:
+            self.xpost_title = self.xpost_title.split()
+        except:
+            print "Failed split"
+            pass
+            self.original_sub_title = None
+            return
+        try:
+            for word in self.xpost_title:
+                if '/r/' in word:
+                    # split from /r/
+                    word = word.split('/r/')[1]
+                    word = word.split(')')[0]   # try for parentheses first
+                    word = word.split(']')[0]   # try for brackets
+                    print("/r/ word = " + word.encode('utf-8'))
+                    self.original_sub_title = word
+                # split for "r/" only format
+                elif 'r/' in word:
+                    word = word.split('r/')[1]
+                    word = word.split(')')[0]   # try for parentheses first
+                    word = word.split(']')[0]   # try for brackets
+                    print("r/ word = " + word.encode('utf-8'))
+                    self.original_sub_title = word
+        except:
+            print("Could not get original subreddit")
+            self.original_sub_title = None
+
+
+    def has_source(self, submission):
+        for comment in submission.comments:
+            try:
+                if (any(string in str(comment.body).lower()
+                        for string in ORIGINAL_COMMENTS)):
+                    print("Source in comments found: ")
+                    print("     " + str(comment.body) + "\n")
+                    return True
+            except:
+                pass
+
+        print "No 'source' comments found"
+        return False
+
+
+    def search_for_post(self, submission, lim):
+        duplicates = submission.get_duplicates(limit=lim)
+
+        print "Searching Dupes"
+        for submission in duplicates:
+            if self.is_original(submission):
+                self.original_permalink = submission.permalink
+                return True
+
+        poster_name = self.xpost_author.encode('utf-8')
+        poster = REDDIT_CLIENT.get_redditor(poster_name)
+        user_submissions = poster.get_submitted(limit=lim)
+
+        print "Searching User"
+        for submission in user_submissions:
+            if self.is_original(submission):
+                self.original_permalink = submission.permalink
+                return True
+
+        # in case the subreddit doesn't exist
+        try:
+            self.original_sub = REDDIT_CLIENT.get_subreddit(self.original_sub_title)
+
+            print "Searching New"
+            for submission in self.original_sub.get_new(limit=lim):
+                if self.is_original(submission):
+                    self.original_permalink = submission.permalink
+                    return True
+
+            print "Searching Hot"
+            for submission in self.original_sub.get_hot(limit=lim):
+                if self.is_original(submission):
+                    self.original_permalink = submission.permalink
+                    return True
+        except:
+            pass
+            return False
+
+        print "--------------Failed all searches"
+        return False
+
+
+    def is_original(self, submission):
+        try:
+            if (self.xpost_url == str(submission.url).encode('utf-8') and
+                submission.subreddit.display_name.lower().encode('utf-8') == self.original_sub_title and
+                submission.over_18 is False and
+                not self.xpost_permalink in submission.permalink):
+                self.set_original_fields(submission)
+                return True
+            return False
+        except:
+            pass
+            return False
+
+
+    def reset_fields(self):
+        self.original_sub_title = None
+        self.original_found = False
+
+
+    def set_xpost_fields(self, submission):
+        try:
+            self.xpost_url = submission.url.encode('utf-8')
+            self.xpost_permalink = submission.permalink
+            self.xpost_author = submission.author.name
+            self.xpost_title = submission.title.lower().encode('utf-8')
         except:
             pass
 
-        # if the submission title is in the X_POST_DICTIONARY, find original
-        if (any(string in post_title for string in X_POST_DICTIONARY) and
-                submission.id not in CACHE):
-            print("\nXPost found!")
-            print("subreddit = " + str(submission.subreddit.display_name.lower()))
-            print("post title = " + post_title)
 
-            SUB_LINK = submission.url
+    def set_original_fields(self, submission):
+        try:
+            self.original_title = submission.title.encode('utf-8')
+            self.original_link = submission.permalink
+            self.original_author = submission.author
+            self.original_found = True
+        except:
+            pass
 
-            write_to_file(submission.id)
 
-            res = get_original_sub(post_title)
+    def clear_database(self):
+        num_rows = ENGINE.execute("select * from searched_posts")
 
-            # to fix NoneType error, for accented/special chars
-            if res is None:
-                print("Res is None - Other Format/Accented/Special Chars")
-                res = False
+        if num_rows.rowcount > 1000:
+            ENGINE.execute("delete from searched_posts")
+            print "Cleared database"
+        if len(self.cache) > 1000:
+            self.cache = self.cache[int(len(self.cache))/2:]
+            print "Halved cache"
 
-            if res:
-                # the original subreddit will contain the original post
-                orig_sub = REDDIT_CLIENT.get_subreddit(res)
 
-                # check to see if there are any "sourced" comments already
-                res = search_comments(submission)
+    def delete_negative(self):
+        user = REDDIT_CLIENT.get_redditor('OriginalPostSearcher')
+        submitted = user.get_comments(limit=150)
+        for item in submitted:
+            if int(item.score) < -1:
+                print("\nDeleted negative comment\n        " + str(item))
+                item.delete()
 
-                # if we can find the original submission, comment
-                if res and (search_user_posts(submission.author.name, 
-                            res, submission.id, submission) or
-                            search_duplicates(submission, res) or
-                            search_original_sub(orig_sub)):
-                    try:
-                        print ("Attempting to comment")
-                        create_comment_string(submission)
-                        res = False
-                    except:
-                        print ("Commenting failed")
-                        res = False
-                else:
-                    write_to_file(submission.id)
 
-            else:
-                print ("No res")
-                write_to_file(submission.id)
-
+    def create_comment(self, submission):
+        print "Making comment\n"
+        if not self.original_author:
+            self.original_author = "a [deleted] user"
         else:
-            write_to_file(submission.id)
+            self.original_author = "/u/" + str(self.original_author)
 
-    print "\n"
+        # no participation link
+        if (submission.subreddit.display_name.lower() in NO_PARTICIPATION and
+            "www.reddit.com/r/" in self.original_link):
+            print ("Using No Participation link")
+            original_link_list = self.original_link.split("https://www.")
+            self.original_link = "http://np." + original_link_list[1]
 
-
-def search_comments(sub):
-    """
-        Search comments for sourced material
-    """
-    print "Searching comments"
-    for comment in sub.comments:
-        if (any(string in str(comment)
-                for string in ORIGINAL_COMMENTS)):
-            print("Source in comments found: ")
-            print("     " + str(comment.body) + "\n")
-            return False
-
-    print "No 'source' comments found"
-    return True
-
-
-def get_new_xposts(xpost_dict):
-    """
-        Searches to get new and most recent xposts
-    """
-    print "Getting new xposts"
-
-    xpost_list = []
-
-    for entry in xpost_dict:
-
-        xpost_titles = REDDIT_CLIENT.search(entry, sort="new")
-
-        for item in xpost_titles:
-            xpost_list.append(item)
-
-    return xpost_list
-
-
-def get_original_sub(title):
-    """
-        Returns title of original subreddit
-    """
-
-    try:
-        print("Getting original subreddit of: " + str(title))
-    except:
-        pass
-
-    global X_POST_TITLE
-
-    X_POST_TITLE = get_title(title)
-
-    # Attempt to find the first /r/ phrase/subreddit
-    try:
-        title = title.split()
-
-        # for each element in that title, look for '/r/'
-        for word in title:
-            # split for "/r/" format
-            if '/r/' in word:
-                # split from /r/
-                word = word.split('/r/')[1]
-                word = word.split(')')[0]   # try for parentheses first
-                word = word.split(']')[0]   # try for brackets
-                print("/r/ word = " + word.encode('utf-8'))
-                return word
-            # split for "r/" only format
-            elif 'r/' in word:
-                word = word.split('r/')[1]
-                word = word.split(')')[0]   # try for parentheses first
-                word = word.split(']')[0]   # try for brackets
-                print("r/ word = " + word.encode('utf-8'))
-                return word
-    except:
-        print("Could not get original subreddit")
-        return False
-
-
-def search_duplicates(sub, result):
-    """
-        Search the duplicates/other discussions to save time
-    """
-
-    global SUB_LINK
-    global ORIGINAL_POST
-    global ORIGINAL_LINK
-    global ORIGINAL_SUBREDDIT
-    global AUTHOR
-
-    print("Searching other discussions")
-
-    # go into the other discussions tab
-    duplicates = sub.get_duplicates(limit=50)
-
-    # check to see if the content contains our subreddit
-    for submission in duplicates:
-        print ("Duplicate submission is " + str(submission))
-
-        # check if the url and subreddit is the same
-        if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
-                submission.subreddit.display_name.lower().encode('utf-8') == result and
-                submission.over_18 is False):
-            print ("Found post in other discussions")
-            print ("Title of duplicate: " + submission.title.encode('utf-8'))
-
-            # Double check if actual referenced post
-            if str(get_original_sub(sub.title)) == str(submission.subreddit):
-                ORIGINAL_SUBREDDIT = str(submission.subreddit)
-            else:
-                print "Double check failed in duplicates"
-                return False
-
-            ORIGINAL_POST = submission.title.encode('utf-8')
-            ORIGINAL_LINK = submission.permalink
-            AUTHOR = submission.author
-            return True
-        else:
-            print("Can't find in other discussions")
-            return False
-
-    print ("No other discussions")
-    return False
-
-
-def search_user_posts(poster_name, result, sub_id, sub):
-    """
-        Checks user's previous posts
-    """
-
-    global SUB_LINK
-    global ORIGINAL_POST
-    global ORIGINAL_LINK
-    global ORIGINAL_SUBREDDIT
-    global AUTHOR
-
-    print ("Searching user's previous posts")
-
-    # properly get the redditor's posts
-    poster_name = poster_name.encode('utf-8')
-    poster = REDDIT_CLIENT.get_redditor(poster_name)
-
-    submissions = poster.get_submitted(limit=100)
-
-    for submission in submissions:
-        # Check to see if the link is the same
-        if (SUB_LINK.encode('utf-8') == str(submission.url).encode('utf-8') and
-            submission.id != sub_id and submission.over_18 is False):
-
-            print ("Found post in user's previous posts")
-            print ("Title of post: " + str(submission.title).encode('utf-8'))
-
-            # Double check if actual referenced post
-            if str(get_original_sub(sub.title)) == str(submission.subreddit):
-                ORIGINAL_SUBREDDIT = str(submission.subreddit)
-            else:
-                print "Double check failed in previous posts"
-                return False
-
-            ORIGINAL_POST = submission.title.encode('utf-8')
-            ORIGINAL_LINK = submission.permalink
-            AUTHOR = submission.author
-            return True
-        else:
-            print ("Can't find in previous posts")
-            return False
-
-    print ("Can't find in previous posts")
-    return False
-
-
-def search_original_sub(original_sub):
-    """
-        Searches original subreddit after found title
-    """
-
-    global X_POST_TITLE
-    global SUB_LINK
-    global ORIGINAL_POST
-    global ORIGINAL_LINK
-    global ORIGINAL_SUBREDDIT
-    global AUTHOR
-
-    print("Searching original subreddit...")
-
-    # Test to confirm getting subreddit
-    try:
-        test = original_sub.get_hot(limit=1)
-        for submission in test:
-            print ("testing: " + str(submission))
-    except:
-        print("Cannot get subreddit")
-        return False
-
-    if X_POST_TITLE:
-        # for each of the submissions in the 'hot' subreddit, search
-        print("Searching 'Hot'")
-        for submission in original_sub.get_hot(limit=200):
-
-            # check to see if the shared content is the same first
-            if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8') and
-                submission.over_18 is False):
-
-                ORIGINAL_POST = submission.title.encode('utf-8')
-                ORIGINAL_LINK = submission.permalink
-                ORIGINAL_SUBREDDIT = str(submission.subreddit)
-                AUTHOR = submission.author
-                print ("Shared content is the same")
-                return True
-            else:
-                # check to see if the string is in the title
-                try:
-                    if (X_POST_TITLE == submission.title.lower() and
-                        submission.over_18 is False):
-
-                        ORIGINAL_POST = submission.title.encode('utf-8')
-                        ORIGINAL_LINK = submission.permalink
-                        ORIGINAL_SUBREDDIT = str(submission.subreddit)
-                        AUTHOR = submission.author
-                        print ("XPost Title is the same")
-                        return True
-                except:
-                    pass
-
-        print("Searching 'New'")
-        # if we can't find the cross post in get_hot
-        for submission in original_sub.get_new(limit=200):
-            # check to see if the shared content is the same first
-            if (SUB_LINK.encode('utf-8') == submission.url.encode('utf-8') and
-                submission.over_18 is False):
-
-                ORIGINAL_POST = submission.title.encode('utf-8')
-                ORIGINAL_LINK = submission.permalink
-                ORIGINAL_SUBREDDIT = str(submission.subreddit)
-                AUTHOR = submission.author
-                print ("Shared content is the same")
-                return True
-            else:
-                # check to see if the string is in the title
-                try:
-                    if (X_POST_TITLE == submission.title.lower() and
-                        submission.over_18 is False):
-
-                        ORIGINAL_POST = submission.title.encode('utf-8')
-                        ORIGINAL_LINK = submission.permalink
-                        ORIGINAL_SUBREDDIT = str(submission.subreddit)
-                        AUTHOR = submission.author
-                        print ("XPost Title is the same")
-                        return True
-                except:
-                    pass
-
-        # if we can't find the original post
-        print("Could not find original post - Hot/New Search Failed")
-        return False
-    else:
-        print("Could not find original post - No X_POST_TITLE")
-        return False
-
-
-def create_comment_string(sub):
-    """
-        Reply with a comment to the XPost
-    """
-
-    print ("Developing comment")
-
-    global X_POST_TITLE
-    global ORIGINAL_POST
-    global ORIGINAL_LINK
-    global ORIGINAL_SUBREDDIT
-    global AUTHOR
-
-    # Author fix
-    if not AUTHOR:
-        AUTHOR = "a [deleted] user"
-    else:
-        AUTHOR = "/u/" + str(AUTHOR)
-
-    # no participation link
-    if (sub.subreddit.display_name.lower() in NO_PARTICIPATION and
-            "www.reddit.com/r/" in ORIGINAL_LINK):
-        print ("Using No Participation link")
-        original_link_list = ORIGINAL_LINK.split("https://www.")
-        ORIGINAL_LINK = "http://np." + original_link_list[1]
-
-    # Create the string to comment with
-    comment_string = ("X-Post referenced from /r/" +
-                      ORIGINAL_SUBREDDIT + " by " + AUTHOR +
-                      "  \n[" + ORIGINAL_POST.encode('utf-8') +
-                      "](" + ORIGINAL_LINK.encode('utf-8') +
-                      ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
+        # create the string to comment with
+        comment_string = ("X-Post referenced from /r/" +
+                      self.original_sub_title + " by " + self.original_author +
+                      "  \n[" + self.original_title.encode('utf-8') +
+                      "](" + self.original_link.encode('utf-8') +
+                      ")\n*****  \n  \n^^I ^^cam ^^a ^^bot ^^made ^^for "
                       "^^your ^^convenience ^^\(Especially ^^for " +
                       "^^mobile ^^users).  \n^^[Contact]" +
                       "(https://www.reddit.com/message/" +
                       "compose/?to=OriginalPostSearcher)" +
                       " ^^| ^^[Code](https://github.com/" +
                       "papernotes/Reddit-OriginalPostSearcher)")
+        print comment_string
 
-    print ("\n" + comment_string)
-
-    if search_comments(sub):
-        # add the comment to the submission
-        sub.add_comment(comment_string)
-
-        # upvote for proper camaraderie
-        sub.upvote()
-        print("\nCommented!")
-    else:
-        print "Source found"
+        # double check
+        if self.has_source(submission):
+            print "Source found"
+        else:
+            submission.add_comment(comment_string)
+            submission.upvote()
+            print "\nCommented!"
 
 
-def get_title(title):
-    """
-        Gets the title of the XPost for comparison
-    """
-    try:
-        print("Getting the title of: " + str(title))
-    except:
-        pass
-
-    # format TITLE(xpost)
-    if (len(title) == title.find(')') + 1):
-        return title.split('(')[0]
-    # format TITLE[xpost]
-    elif (len(title) == title.find(']') + 1):
-        return title.split('[')[0]
-    # format (xpost)TITLE
-    elif (title.find('(') == 0):
-        return title.split(')')[1]
-    # format [xpost]TITLE
-    elif (title.find('[') == 0):
-        return title.split('[')[1]
-    # weird format, return false
-    else:
-        print ("Couldn't get title correctly")
-        return None
+    def is_ignored_nsfw(self, submission):
+        return not (submission.subreddit.display_name.lower() in self.ignored_subs or
+           submission.over_18 is True)
 
 
-def delete_negative():
-    """
-        Delete badly received comments
-    """
-    user = REDDIT_CLIENT.get_redditor('OriginalPostSearcher')
-    submitted = user.get_comments(limit=200)
-    for item in submitted:
-        if int(item.score) < 0:
-            print("\nDeleted negative comment\n        " + str(item))
-            item.delete()
+if __name__ == '__main__':
+    bot = SearchBot()
+    print "Created bot"
 
+    while True:
+        bot.set_xpost_submissions(X_POST_DICTIONARY, REDDIT_CLIENT)
+        bot.setup_database_cache()
 
-# Database
+        for submission in bot.xpost_submissions:
+            # NSFW content or ignored subreddit
+            if not bot.is_ignored_nsfw(submission) and submission.id not in bot.cache:
+                bot.write_to_file(submission.id)
+                bot.reset_fields()
+                continue
 
-def write_to_file(sub_id):
-    """
-        Save the submissions we searched
-    """
+            if bot.is_xpost(submission) and submission.id not in bot.cache:
+                bot.set_xpost_fields(submission)
 
-    if not id_added(sub_id):
-        temp_text = text('insert into searched_posts (post_id) values(:postID)')
-        ENGINE.execute(temp_text, postID=sub_id)
+                print("\nXPost found!")
+                print("subreddit = " + str(submission.subreddit.display_name.lower()))
+                print("post title = " + bot.xpost_title)
+                print("xpost_url = " + bot.xpost_url)
+                print("xpost_permalink = " + bot.xpost_permalink)
 
+                bot.write_to_file(submission.id)
+                bot.get_original_sub()
 
-def id_added(sub_id):
-    """
-        Check to see if the item is already in the database
-    """
+                if bot.original_sub_title == None:
+                    print "Failed original subreddit"
+                else:
+                    if not bot.has_source(submission) and bot.search_for_post(submission, 150):
+                        try:
+                            bot.create_comment(submission)
+                            bot.write_to_file(submission.id)
+                            bot.reset_fields()
+                        except:
+                            print "Failed to comment"
+                            bot.write_to_file(submission.id)
+                            bot.reset_fields()
+                    else:
+                        print "Failed to find source"
+                        bot.write_to_file(submission.id)
+                        bot.reset_fields()
+            # the submission is not an xpost or submission id is in cache already
+            else:
+                bot.reset_fields()
 
-    is_added_text = text("select * from searched_posts where post_id = :postID")
-    return ENGINE.execute(is_added_text, postID=sub_id).rowcount != 0
+        bot.temp_cache = []
+        bot.xpost_submissions = []
 
-
-def clear_database():
-    """
-        Clear our column/database if our rowcount is too high
-        Also cuts the CACHE in half
-    """
-
-    global CACHE
-
-    num_rows = ENGINE.execute("select * from searched_posts")
-    if (num_rows.rowcount > 1000):
-        ENGINE.execute("delete from searched_posts")
-        print("Cleared database")
-
-    # cut cache in half if needed
-    if len(CACHE) > 1000:
-        CACHE = CACHE[int(len(CACHE))/2:]
-        print ("Halved CACHE")
-
-
-print ("Starting bot")
-
-# continuously run the bot
-while True:
-    # run the bulk of the bot
-    run_bot()
-
-    # reset the CACHE
-    TEMP_CACHE = []
-
-    delete_negative()
-
-    print("Sleeping...")
-    time.sleep(10)
-
-    clear_database()
+        print "\nSleeping\n"
+        time.sleep(10)
+        if len(bot.cache) > 1000:
+            bot.delete_negative()
+            bot.clear_database()
