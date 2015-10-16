@@ -282,7 +282,7 @@ class SearchBot(object):
                       self.original_sub_title + " by " + self.original_author +
                       "  \n[" + self.original_title.encode('utf-8') +
                       "](" + self.original_link.encode('utf-8') +
-                      ")\n*****  \n  \n^^I ^^cam ^^a ^^bot ^^made ^^for "
+                      ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
                       "^^your ^^convenience ^^\(Especially ^^for " +
                       "^^mobile ^^users).  \n^^[Contact]" +
                       "(https://www.reddit.com/message/" +
@@ -327,7 +327,7 @@ if __name__ == '__main__':
                 print("subreddit = " + str(submission.subreddit.display_name.lower()))
                 print("post title = " + bot.xpost_title)
                 print("xpost_url = " + bot.xpost_url)
-                print("xpost_permalink = " + bot.xpost_permalink)
+                print("xpost_permalink = " + bot.xpost_permalink.encode('utf-8'))
 
                 bot.write_to_file(submission.id)
                 bot.get_original_sub()
