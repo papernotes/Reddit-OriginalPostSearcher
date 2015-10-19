@@ -320,10 +320,14 @@ if __name__ == '__main__':
                 bot.reset_fields()
                 continue
 
-            if bot.is_xpost(submission) and submission.id not in bot.cache and
-               "reddit" not in xpost_permalink.encode('utf-8'):
+            if bot.is_xpost(submission) and submission.id not in bot.cache:
                
                 bot.set_xpost_fields(submission)
+
+                if "reddit" not in bot.xpost_permalink.encode('utf-8'):
+                    bot.write_to_file(submission)
+                    bot.reset_fields()
+                    continue
 
                 print("\nXPost found!")
                 print("subreddit = " + str(submission.subreddit.display_name.lower()))
