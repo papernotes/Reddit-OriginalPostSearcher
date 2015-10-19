@@ -320,7 +320,9 @@ if __name__ == '__main__':
                 bot.reset_fields()
                 continue
 
-            if bot.is_xpost(submission) and submission.id not in bot.cache:
+            if bot.is_xpost(submission) and submission.id not in bot.cache and
+               "reddit" not in xpost_permalink.encode('utf-8'):
+               
                 bot.set_xpost_fields(submission)
 
                 print("\nXPost found!")
