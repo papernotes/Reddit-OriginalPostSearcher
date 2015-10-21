@@ -326,7 +326,7 @@ if __name__ == '__main__':
 
                 if "reddit" in bot.xpost_url.encode('utf-8'):
                     print "Post links to Reddit"
-                    bot.write_to_file(submission)
+                    bot.write_to_file(submission.id)
                     bot.reset_fields()
                     continue
 
