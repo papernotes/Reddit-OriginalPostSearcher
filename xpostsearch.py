@@ -324,7 +324,8 @@ if __name__ == '__main__':
                
                 bot.set_xpost_fields(submission)
 
-                if "reddit" not in bot.xpost_permalink.encode('utf-8'):
+                if "reddit" in bot.xpost_url.encode('utf-8'):
+                    print "Post links to Reddit"
                     bot.write_to_file(submission)
                     bot.reset_fields()
                     continue
