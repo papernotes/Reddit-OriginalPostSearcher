@@ -3,4 +3,5 @@ nopart_list = ["protectandserve", "dataisbeautiful", "scotland", "conspiracy",
         "ireland", "liverpoolfc", "bulgaria", "indianews", "makeupaddiction",
         "gamerghazi", "ccw", "enoughlibertarianspam", "akron", "civcraft", "frat",
         "fnafcringe", "femmethoughts", "chicubs", "firearms", "indiegaming", "menslib",
-        "dotamasterrace", "caps", "talesfromyourserver", "vzla", "linuxmasterrace"]
+        "dotamasterrace", "caps", "talesfromyourserver", "vzla", "linuxmasterrace",
+        "blackpower", "rowing"]
