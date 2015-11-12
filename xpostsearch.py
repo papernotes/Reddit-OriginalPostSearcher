@@ -7,7 +7,7 @@ import time
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.2.0")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.2.1")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -45,6 +45,7 @@ class SearchBot(object):
         self.xpost_permalink = None
         self.xpost_title = None
         self.xpost_author = None
+        self.xpost_sub = None
 
         # fields for the original subreddit
         self.original_sub = None                # subreddit object
@@ -135,6 +136,7 @@ class SearchBot(object):
                     word = word.split(']')[0]   # try for brackets
                     print("/r/ word = " + word.encode('utf-8'))
                     self.original_sub_title = word
+                    break
                 # split for "r/" only format
                 elif 'r/' in word:
                     word = word.split('r/')[1]
@@ -142,6 +144,9 @@ class SearchBot(object):
                     word = word.split(']')[0]   # try for brackets
                     print("r/ word = " + word.encode('utf-8'))
                     self.original_sub_title = word
+                    break
+                else:
+                    self.original_sub_title = None
         except:
             print("Could not get original subreddit")
             self.original_sub_title = None
@@ -229,6 +234,7 @@ class SearchBot(object):
             self.xpost_permalink = submission.permalink
             self.xpost_author = submission.author.name
             self.xpost_title = submission.title.lower().encode('utf-8')
+            self.xpost_sub = submission.subreddit
         except:
             pass
 
@@ -344,8 +350,10 @@ if __name__ == '__main__':
                 bot.write_to_file(submission.id)
                 bot.get_original_sub()
 
-                if bot.original_sub_title == None:
-                    print "Failed original subreddit"
+                if (bot.original_sub_title == None or 
+                    bot.original_sub_title == bot.xpost_sub.display_name.lower().encode('utf-8')):
+                    print "Failed original subreddit or same subreddit"
+                    bot.reset_fields()
                 else:
                     if not bot.has_source(submission) and bot.search_for_post(submission, 150):
                         try:

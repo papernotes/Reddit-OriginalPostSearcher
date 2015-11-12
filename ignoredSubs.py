@@ -51,4 +51,4 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "imaginarycharacters", "adorableart", "bengals", "soma", "frontpage", "whatisthis", "lawschool",
         "shitamericanssay", "cbc_radio", "colorado", "redditdads", "apotheoun", "hyomin", "newzealand", "publicfreakout",
         "beachdogs", "catholicism", "chemistry", "montreal", "longbeards", "fishing", "slowcooking", "everythingscience",
-        "retrobattlestations", "electricians", "crossdressing"]
+        "retrobattlestations", "electricians", "crossdressing", "starwars", "iamverysmart"]
