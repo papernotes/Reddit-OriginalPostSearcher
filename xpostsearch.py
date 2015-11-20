@@ -302,7 +302,6 @@ class SearchBot(object):
             print "Source found"
         else:
             submission.add_comment(comment_string)
-            submission.upvote()
             print "\nCommented!"
 
 
