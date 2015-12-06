@@ -51,4 +51,8 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "imaginarycharacters", "adorableart", "bengals", "soma", "frontpage", "whatisthis", "lawschool",
         "shitamericanssay", "cbc_radio", "colorado", "redditdads", "apotheoun", "hyomin", "newzealand", "publicfreakout",
         "beachdogs", "catholicism", "chemistry", "montreal", "longbeards", "fishing", "slowcooking", "everythingscience",
-        "retrobattlestations", "electricians", "crossdressing", "starwars", "iamverysmart", "cowboys", "userexperience"]
+        "retrobattlestations", "electricians", "crossdressing", "starwars", "iamverysmart", "cowboys", "userexperience",
+        "japanesewatches", "opiates", "2007scape", "korean", "gamedeals", "blind", "blackpeoplegifs", "animalsbeingbros",
+        "analogygifs", "camping", "cityporn", "bestofreports", "memes", "internetisbeautiful", "highqualitygifs",
+        "humansbeingbros", "rage", "reactiongifs", "hifw", "nottheonion", "reversegif", "thingsthatblowup", "youdontsurf",
+        "wastedgifs", "genderqueer", "imagesofnewyork", "imagesofcanada", "imagesofusa", "imagesofalabama"]
