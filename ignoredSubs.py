@@ -1,3 +1,5 @@
+# A list of subreddits to not bother searching in/bothering/banned from
+
 ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "chicagosuburbs", 
     	"cosplay", "cumberbitches", "d3gf", "deer", "depression", "depthhub", 
     	"drinkingdollars", "forwardsfromgrandma", "geckos", "giraffes", 
@@ -55,4 +57,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "japanesewatches", "opiates", "2007scape", "korean", "gamedeals", "blind", "blackpeoplegifs", "animalsbeingbros",
         "analogygifs", "camping", "cityporn", "bestofreports", "memes", "internetisbeautiful", "highqualitygifs",
         "humansbeingbros", "rage", "reactiongifs", "hifw", "nottheonion", "reversegif", "thingsthatblowup", "youdontsurf",
-        "wastedgifs", "genderqueer", "imagesofnewyork", "imagesofcanada", "imagesofusa", "imagesofalabama"]
+        "wastedgifs", "genderqueer", "imagesofnewyork", "imagesofcanada", "imagesofusa", "imagesofalabama", "miiverseinaction",
+        "tattoos", "seahawks", "conspiracymemes", "justneckbeardthings", "ar15"]
