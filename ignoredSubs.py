@@ -58,4 +58,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "analogygifs", "camping", "cityporn", "bestofreports", "memes", "internetisbeautiful", "highqualitygifs",
         "humansbeingbros", "rage", "reactiongifs", "hifw", "nottheonion", "reversegif", "thingsthatblowup", "youdontsurf",
         "wastedgifs", "genderqueer", "imagesofnewyork", "imagesofcanada", "imagesofusa", "imagesofalabama", "miiverseinaction",
-        "tattoos", "seahawks", "conspiracymemes", "justneckbeardthings", "ar15"]
+        "tattoos", "seahawks", "conspiracymemes", "justneckbeardthings", "ar15", "trance", "5555555", "commentsgetdrawn",
+        "unitedstatesofamerica", "workbenches", "philippines"]
