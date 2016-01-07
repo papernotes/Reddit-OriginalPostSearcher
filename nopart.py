@@ -7,4 +7,4 @@ nopart_list = ["protectandserve", "dataisbeautiful", "scotland", "conspiracy",
         "fnafcringe", "femmethoughts", "chicubs", "firearms", "indiegaming", "menslib",
         "dotamasterrace", "caps", "talesfromyourserver", "vzla", "linuxmasterrace",
         "blackpower", "rowing", "babybumps", "korea", "predators", "twoxadhd",
-        "weekendgunnit", "safetyfirst", "sublime"]
+        "weekendgunnit", "safetyfirst", "sublime", "femmethoughtsfeminism"]

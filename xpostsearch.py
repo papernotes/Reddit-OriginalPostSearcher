@@ -294,7 +294,9 @@ class SearchBot(object):
                       "(https://www.reddit.com/message/" +
                       "compose/?to=OriginalPostSearcher)" +
                       " ^^| ^^[Code](https://github.com/" +
-                      "papernotes/Reddit-OriginalPostSearcher)")
+                      "papernotes/Reddit-OriginalPostSearcher)" +
+                      " ^^| ^^[FAQ](https://github.com/papernotes/" +
+                      "Reddit-OriginalPostSearcher#faq)")
         print comment_string
 
         # double check
