@@ -17,7 +17,7 @@ X_POST_DICTIONARY = ["xpost", "x-post", "crosspost","cross-post",
 # list of words to check for so we don't post if source is already there
 ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link',
                      'x-post', 'xpost', 'x-post', 'crosspost', 'cross post',
-                     'cross-post', 'referenced']
+                     'cross-post', 'referenced', 'credit', 'credited']
 
 # create the ENGINE for the database
 ENGINE = create_engine(herokuDB.url)
