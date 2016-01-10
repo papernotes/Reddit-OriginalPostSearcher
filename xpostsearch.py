@@ -11,22 +11,28 @@ REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.2.1")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
-X_POST_DICTIONARY = ["xpost", "x-post", "crosspost","cross-post",
-                     "xposted", "crossposted", "x-posted"]
+
+X_POST_DICTIONARY = set()
+X_POST_DICTIONARY.update(["xpost", "x-post", "crosspost","cross-post",
+                     "xposted", "crossposted", "x-posted"])
+
 
 # list of words to check for so we don't post if source is already there
-ORIGINAL_COMMENTS = ['source', 'original', 'original post', 'sauce', 'link',
+ORIGINAL_COMMENTS = set()
+ORIGINAL_COMMENTS.update(['source', 'original', 'original post', 'sauce', 'link',
                      'x-post', 'xpost', 'x-post', 'crosspost', 'cross post',
-                     'cross-post', 'referenced', 'credit', 'credited']
+                     'cross-post', 'referenced', 'credit', 'credited'])
 
 # create the ENGINE for the database
 ENGINE = create_engine(herokuDB.url)
 
 # don't bother these subs
-IGNORED_SUBS = ignoredSubs.ignore_list
+IGNORED_SUBS = set()
+IGNORED_SUBS.update(ignoredSubs.ignore_list)
 
 # No participation link subs
-NO_PARTICIPATION = nopart.nopart_list
+NO_PARTICIPATION = set()
+NO_PARTICIPATION.update(nopart.nopart_list)
 
 
 class SearchBot(object):
@@ -36,9 +42,9 @@ class SearchBot(object):
         self.ignored_subs = IGNORED_SUBS
 
         # cache for database
-        self.cache = []
-        self.temp_cache = []
-        self.xpost_submissions = []
+        self.cache = set()
+        self.temp_cache = set()
+        self.xpost_submissions = set()
 
         # fields for the xposted submission
         self.xpost_url = None                   # link shared in the submission
@@ -59,11 +65,11 @@ class SearchBot(object):
         result = self.engine.execute("select * from searched_posts")
 
         for row in result:
-            self.temp_cache.append(str(row[0]))
+            self.temp_cache.add(str(row[0]))
 
         for value in self.temp_cache:
             if value not in self.cache:
-                self.cache.append(str(value))
+                self.cache.add(str(value))
 
 
     def set_xpost_submissions(self, search_terms, client):
@@ -73,7 +79,7 @@ class SearchBot(object):
         print "Finding xposts"
         for entry in search_terms:
             for title in client.search(entry, sort="new"):
-                self.xpost_submissions.append(title)
+                self.xpost_submissions.add(title)
 
 
     def write_to_file(self, sub_id):
@@ -373,8 +379,8 @@ if __name__ == '__main__':
             else:
                 bot.reset_fields()
 
-        bot.temp_cache = []
-        bot.xpost_submissions = []
+        bot.temp_cache.clear()
+        bot.xpost_submissions.clear()
 
         print "\nSleeping\n"
         time.sleep(10)
