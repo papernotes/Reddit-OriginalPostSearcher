@@ -59,4 +59,4 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "humansbeingbros", "rage", "reactiongifs", "hifw", "nottheonion", "reversegif", "thingsthatblowup", "youdontsurf",
         "wastedgifs", "genderqueer", "imagesofnewyork", "imagesofcanada", "imagesofusa", "imagesofalabama", "miiverseinaction",
         "tattoos", "seahawks", "conspiracymemes", "justneckbeardthings", "ar15", "trance", "5555555", "commentsgetdrawn",
-        "unitedstatesofamerica", "workbenches", "philippines", "tng", "leagueofmemes"]
+        "unitedstatesofamerica", "workbenches", "philippines", "tng", "leagueofmemes", "atari", "kiddet"]
