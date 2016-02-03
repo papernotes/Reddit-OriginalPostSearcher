@@ -22,7 +22,7 @@ I actually did not realize that there was an "other discussions" tab until it wa
 **How does it work?**  
 Generally speaking, the bot looks to find any submission with that might be an x-post, tries to see if it can find the original submission in the subreddit mentioned in the title *e.g. Title of post! (xpost from /r/specific_subreddit)*, and comments to the x-post the title of original submission, the author of that submission, its subreddit, and a link to the original submission. The bot is hosted on Heroku.  
   
-**How does the bot search for the original post?**
+**How does the bot search for the original post?**  
 I, funnily enough, ended up using the "other discussions", along with several other tiers of searching with PRAW for the bot's code.  
 First, the bot checks the user's previous history, and if that fails, the bot checks the "other discussions" tab. If that fails as well, the bot will look through the referenced subreddit in the title of the x-post and search through the *Hot* and *New* tabs of the subreddit. By that time, the bot will hopefully find the post and comment.
   
