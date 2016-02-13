@@ -8,4 +8,5 @@ nopart_list = ["protectandserve", "dataisbeautiful", "scotland", "conspiracy",
         "dotamasterrace", "caps", "talesfromyourserver", "vzla", "linuxmasterrace",
         "blackpower", "rowing", "babybumps", "korea", "predators", "twoxadhd",
         "safetyfirst", "sublime", "femmethoughtsfeminism", "hungergames", "tumblrpls",
-        "warriors", "democrats", "btc", "turkey", "goldreplies"]
+        "warriors", "democrats", "btc", "turkey", "goldreplies", "makeupaddictioncanada",
+        "sino"]
