@@ -61,4 +61,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "tattoos", "seahawks", "conspiracymemes", "justneckbeardthings", "ar15", "trance", "5555555", "commentsgetdrawn",
         "unitedstatesofamerica", "workbenches", "philippines", "tng", "leagueofmemes", "atari", "kiddet", "hillaryclinton",
         "boston", "coffee", "weekendgunnit", "cardinals", "torontobluejays", "military", "goldreplies", "shinjimin",
-        "losangeleskings", "writermotivation", "kerbalplanes", "sto", "latino", "southflorida", "mylittleandysonic1", "zika"]
+        "losangeleskings", "writermotivation", "kerbalplanes", "sto", "latino", "southflorida", "mylittleandysonic1", "zika",
+        "babyrooms", "nononono"]
