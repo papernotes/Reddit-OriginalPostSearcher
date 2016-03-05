@@ -7,7 +7,7 @@ import time
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.2.1")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.2.2")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -21,7 +21,8 @@ X_POST_DICTIONARY.update(["xpost", "x-post", "crosspost","cross-post",
 ORIGINAL_COMMENTS = set()
 ORIGINAL_COMMENTS.update(['source', 'original', 'original post', 'sauce', 'link',
                      'x-post', 'xpost', 'x-post', 'crosspost', 'cross post',
-                     'cross-post', 'referenced', 'credit', 'credited'])
+                     'cross-post', 'referenced', 'credit', 'credited', 'other',
+                     'post'])
 
 # create the ENGINE for the database
 ENGINE = create_engine(herokuDB.url)
@@ -267,6 +268,7 @@ class SearchBot(object):
 
 
     def delete_negative(self):
+        print "Checking previous comments for deletion"
         user = REDDIT_CLIENT.get_redditor('OriginalPostSearcher')
         submitted = user.get_comments(limit=150)
         for item in submitted:
@@ -296,7 +298,8 @@ class SearchBot(object):
                       "](" + self.original_link.encode('utf-8') +
                       ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
                       "^^your ^^convenience ^^\(Especially ^^for " +
-                      "^^mobile ^^users).  \n^^[Contact]" +
+                      "^^mobile ^^users)." + "  \n^^P.S. ^^negative ^^comments " +
+                      "^^get ^^deleted.  \n^^[Contact]" +
                       "(https://www.reddit.com/message/" +
                       "compose/?to=OriginalPostSearcher)" +
                       " ^^| ^^[Code](https://github.com/" +
@@ -379,11 +382,11 @@ if __name__ == '__main__':
             else:
                 bot.reset_fields()
 
+        bot.delete_negative()
         bot.temp_cache.clear()
         bot.xpost_submissions.clear()
 
         print "\nSleeping\n"
         time.sleep(10)
         if len(bot.cache) > 1000:
-            bot.delete_negative()
             bot.clear_database()

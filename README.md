@@ -104,4 +104,5 @@ And many "you have been banned from posting to /r/______"
 1.1.9 (9/18/2015)  -  Added secondary check to make sure no source comments are found after setting up comment
 1.2.0 (10/15/2015) -  Major code refactoring. Bot is now object-oriented. Also slightly faster than previous versions.
 1.2.1 (11/12/2015) -  Added check to see make sure link isn't from the same subreddit. Small fix for finding original subreddit name
+1.2.2 (3/4/2016)   -  Fixed bug in not deleting negative comments regularly
 ```

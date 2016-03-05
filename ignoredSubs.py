@@ -62,4 +62,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "unitedstatesofamerica", "workbenches", "philippines", "tng", "leagueofmemes", "atari", "kiddet", "hillaryclinton",
         "boston", "coffee", "weekendgunnit", "cardinals", "torontobluejays", "military", "goldreplies", "shinjimin",
         "losangeleskings", "writermotivation", "kerbalplanes", "sto", "latino", "southflorida", "mylittleandysonic1", "zika",
-        "babyrooms", "nononono", "overlanding", "ak47", "callofduty", "bbcradiodrama", "the_crew", "shittydarksouls", "atheism"]
+        "babyrooms", "nononono", "overlanding", "ak47", "callofduty", "bbcradiodrama", "the_crew", "shittydarksouls", "atheism",
+        "badtattoos", "army"]
