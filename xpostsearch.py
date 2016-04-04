@@ -298,8 +298,8 @@ class SearchBot(object):
                       "](" + self.original_link.encode('utf-8') +
                       ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
                       "^^your ^^convenience ^^\(Especially ^^for " +
-                      "^^mobile ^^users)." + "  \n^^P.S. ^^negative ^^comments " +
-                      "^^get ^^deleted.  \n^^[Contact]" +
+                      "^^mobile ^^users)." + "  \n^^P.S. ^^my ^^negative " +
+                      "^^comments ^^get ^^deleted.  \n^^[Contact]" +
                       "(https://www.reddit.com/message/" +
                       "compose/?to=OriginalPostSearcher)" +
                       " ^^| ^^[Code](https://github.com/" +
