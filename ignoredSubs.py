@@ -64,4 +64,4 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "losangeleskings", "writermotivation", "kerbalplanes", "sto", "latino", "southflorida", "mylittleandysonic1", "zika",
         "babyrooms", "nononono", "overlanding", "ak47", "callofduty", "bbcradiodrama", "the_crew", "shittydarksouls", "atheism",
         "badtattoos", "army", "quityourbullshit", "mycology", "brokengifs", "catslaps", "albany", "canadaguns", "makeupaddiction",
-        "freeeuropenews", "naruto", "magnificentmemes"]
+        "freeeuropenews", "naruto", "magnificentmemes", "onepunchman", "emcomm", "belgium", "sysadmin", "codeperformance"]
