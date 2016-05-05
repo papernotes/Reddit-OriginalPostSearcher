@@ -7,7 +7,7 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
     	"pigs", "politicaldiscussion", "politics", "programmingcirclejerk", "raerthdev", 
     	"rants", "runningcirclejerk", "salvia", "science", "seiko", "shoplifting", 
     	"sketches","suicidewatch", "talesfromtechsupport","torrent","torrents","trackers",
-	    "tr4shbros", "unitedkingdom", "askreddit", "benfrick", "futurology", 
+        "tr4shbros", "unitedkingdom", "askreddit", "benfrick", "futurology", 
     	"graphic_design", "historicalwhatif", "lolgrindr", "malifaux", "nfl", 
     	"toonami", "ps2ceres","duelingcorner", "gadgets", "personalfinance", "woahdude",
         "wheredidthesodago", "gentlemanboners", "cats", "business", "holdmybeer", "beer",
@@ -64,4 +64,6 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "losangeleskings", "writermotivation", "kerbalplanes", "sto", "latino", "southflorida", "mylittleandysonic1", "zika",
         "babyrooms", "nononono", "overlanding", "ak47", "callofduty", "bbcradiodrama", "the_crew", "shittydarksouls", "atheism",
         "badtattoos", "army", "quityourbullshit", "mycology", "brokengifs", "catslaps", "albany", "canadaguns", "makeupaddiction",
-        "freeeuropenews", "naruto", "magnificentmemes", "onepunchman", "emcomm", "belgium", "sysadmin", "codeperformance"]
+        "freeeuropenews", "naruto", "magnificentmemes", "onepunchman", "emcomm", "belgium", "sysadmin", "codeperformance",
+        "watches", "stpetersburgfl", "imagesofwisconsin", "hockeycards", "imagesofengland", "koreangirlstop", "infinitewarfare",
+        "indianfood"]
