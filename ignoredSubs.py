@@ -66,4 +66,7 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "badtattoos", "army", "quityourbullshit", "mycology", "brokengifs", "catslaps", "albany", "canadaguns", "makeupaddiction",
         "freeeuropenews", "naruto", "magnificentmemes", "onepunchman", "emcomm", "belgium", "sysadmin", "codeperformance",
         "watches", "stpetersburgfl", "imagesofwisconsin", "hockeycards", "imagesofengland", "koreangirlstop", "infinitewarfare",
-        "indianfood"]
+        "indianfood", "mariners", "britpics", "redditgetsdrawn", "fantasy", "gascar", "labsafety", "rpg", "taliyahmains",
+        "woodworking", "iosgaming", "doctorwhumour", "imagesofcalifornia", "imagesofflorida", "imagesofmaine", "imagesofmichigan",
+        "imagesoforegon", "imagesofthe1910s", "imagesofvirginia", "imagesofvermont", "imagesofthe2010s", "texas", "misanthropy",
+        "hipaa", "canadapolitics"]
