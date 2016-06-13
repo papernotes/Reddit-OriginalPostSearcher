@@ -84,10 +84,8 @@ class SearchBot(object):
                       self.original_sub_title + " by " + self.original_author +
                       "  \n[" + self.original_title.encode('utf-8') +
                       "](" + self.original_link.encode('utf-8') +
-                      ")\n*****  \n  \n^^I ^^am ^^a ^^bot ^^made ^^for "
-                      "^^your ^^convenience ^^\(Especially ^^for " +
-                      "^^mobile ^^users)." + "  \n^^P.S. ^^my ^^negative " +
-                      "^^comments ^^get ^^deleted.  \n^^[Contact]" +
+                      ")\n*****  \n  \n^^I ^^am ^^a ^^bot. ^^I" +
+                      "^^delete ^^my ^^negative ^^comments. ^^[Contact]" +
                       "(https://www.reddit.com/message/" +
                       "compose/?to=OriginalPostSearcher)" +
                       " ^^| ^^[Code](https://github.com/" +

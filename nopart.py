@@ -10,4 +10,4 @@ nopart_list = ["protectandserve", "dataisbeautiful", "scotland", "conspiracy",
         "safetyfirst", "sublime", "femmethoughtsfeminism", "hungergames", "tumblrpls",
         "warriors", "democrats", "btc", "turkey", "goldreplies", "makeupaddictioncanada",
         "sino", "mcfc", "indianfood", "truestl", "bollywood", "blmwatch", "redsox",
-        "cloud9", "latterdaysaints", "cowx", "childfree"]
+        "cloud9", "latterdaysaints", "cowx", "childfree", "africa", "speedrun"]
