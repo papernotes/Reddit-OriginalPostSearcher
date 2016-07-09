@@ -69,4 +69,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "indianfood", "mariners", "britpics", "redditgetsdrawn", "fantasy", "gascar", "labsafety", "rpg", "taliyahmains",
         "woodworking", "iosgaming", "doctorwhumour", "imagesofcalifornia", "imagesofflorida", "imagesofmaine", "imagesofmichigan",
         "imagesoforegon", "imagesofthe1910s", "imagesofvirginia", "imagesofvermont", "imagesofthe2010s", "texas", "misanthropy",
-        "hipaa", "canadapolitics", "unixporn", "pureasoiaf"]
+        "hipaa", "canadapolitics", "unixporn", "pureasoiaf", "joerogaine", "subredditsimulator", "vintageelectronics", "neutralnews",
+        "california", "fastfood", "mcdonalds", "obama", "catholicpolitics", "funfacts", "liberal", "enoughsandersspam"]
