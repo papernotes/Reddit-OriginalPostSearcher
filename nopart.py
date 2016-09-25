@@ -11,4 +11,5 @@ nopart_list = ["protectandserve", "dataisbeautiful", "scotland", "conspiracy",
         "warriors", "democrats", "btc", "turkey", "goldreplies", "makeupaddictioncanada",
         "sino", "mcfc", "indianfood", "truestl", "bollywood", "blmwatch", "redsox",
         "cloud9", "latterdaysaints", "cowx", "childfree", "africa", "speedrun",
-        "plantsvszombies"]
+        "plantsvszombies", "irelandjournalism", "pinac", "leicester_tigers", "mcfc",
+        "visualization", "livestreamfail"]
