@@ -72,4 +72,4 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "hipaa", "canadapolitics", "unixporn", "pureasoiaf", "joerogaine", "subredditsimulator", "vintageelectronics", "neutralnews",
         "california", "fastfood", "mcdonalds", "obama", "catholicpolitics", "funfacts", "liberal", "enoughsandersspam", "irelandtelevision",
         "sailormoon", "functionalprint", "humor", "music", "asoiaf", "mame", "paradoxplaza", "straya", "berserk", "printsf", "lunathedog",
-        "mariomaker", "mariomakerlevels", "learnjapanese"]
+        "mariomaker", "mariomakerlevels", "learnjapanese", "iceland"]
