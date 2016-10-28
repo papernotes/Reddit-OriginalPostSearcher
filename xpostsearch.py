@@ -1,13 +1,12 @@
 """ OriginalPostSearcher bot """
 import herokuDB
 import ignoredSubs
-import nopart
 import praw
 import time
 from sqlalchemy import create_engine
 from sqlalchemy import text
 
-REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 1.2.3")
+REDDIT_CLIENT = praw.Reddit(user_agent="OriginalPostSearcher 2.0.0")
 REDDIT_CLIENT.login(disable_warning=True)
 
 # a list of words that might be an "xpost"
@@ -30,10 +29,6 @@ ENGINE = create_engine(herokuDB.url)
 # don't bother these subs
 IGNORED_SUBS = set()
 IGNORED_SUBS.update(ignoredSubs.ignore_list)
-
-# No participation link subs
-NO_PARTICIPATION = set()
-NO_PARTICIPATION.update(nopart.nopart_list)
 
 
 class SearchBot(object):
@@ -72,16 +67,14 @@ class SearchBot(object):
         else:
             self.original_author = "/u/" + str(self.original_author)
 
-        # no participation link
-        if (submission.subreddit.display_name.lower() in NO_PARTICIPATION and
-            "www.reddit.com/r/" in self.original_link):
-            print ("Using No Participation link")
-            original_link_list = self.original_link.split("https://www.")
-            self.original_link = "http://np." + original_link_list[1]
+        # make links np links
+        original_link_list = self.original_link.split("https://www.")
+        self.original_link = "http://np." + original_link_list[1]
 
         # create the string to comment with
-        comment_string = ("X-Post referenced from /r/" +
-                      self.original_sub_title + " by " + self.original_author +
+        comment_string = ("X-Post referenced from [/r/" +
+                      self.original_sub_title + "](http://np.reddit.com/r/" + 
+                      self.original_sub_title + ") by " + self.original_author +
                       "  \n[" + self.original_title.encode('utf-8') +
                       "](" + self.original_link.encode('utf-8') +
                       ")\n*****  \n  \n^^I ^^am ^^a ^^bot. ^^I" +

@@ -107,4 +107,5 @@ And many "you have been banned from posting to /r/______"
 1.2.1 (11/12/2015) -  Added check to see make sure link isn't from the same subreddit. Small fix for finding original subreddit name
 1.2.2 (3/4/2016)   -  Fixed bug in not deleting negative comments regularly
 1.2.3 (6/4/2016)   -  Added check for when the original submission's title references the xpost's title
+2.0.0 (10/28/2016) -  Adopted SemVer and change links to other subreddits to be np links
 ```
