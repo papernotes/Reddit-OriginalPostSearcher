@@ -73,4 +73,5 @@ ignore_list = ["anime", "asianamerican", "askhistorians", "askscience", "aww", "
         "california", "fastfood", "mcdonalds", "obama", "catholicpolitics", "funfacts", "liberal", "enoughsandersspam", "irelandtelevision",
         "sailormoon", "functionalprint", "humor", "music", "asoiaf", "mame", "paradoxplaza", "straya", "berserk", "printsf", "lunathedog",
         "mariomaker", "mariomakerlevels", "learnjapanese", "iceland", "spotted", "tools", "whatisthisthing", "battlebots", "caferacers",
-        "mkd", "onionhate", "elitedangerous", "thelastofus", "strangerthings", "darkfuturology", "sacramento"]
+        "mkd", "onionhate", "elitedangerous", "thelastofus", "strangerthings", "darkfuturology", "sacramento", "thathappened",
+        "asmr", "codmodernwarfare", "laclippers", "bayarea", "moonmoon"]
